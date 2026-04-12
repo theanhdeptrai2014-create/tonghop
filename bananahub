@@ -1,0 +1,23 @@
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+WindUI:SetTheme("Dark")
+
+local Window = WindUI:CreateWindow({
+    Title = "0101010",
+    Author = "Clean Version",
+    Size = UDim2.fromOffset(580, 400),
+    Transparent = true,
+})
+
+-- TAB INFO
+local Tab1 = Window:Tab({
+    Title = "Thông tin",
+})
+
+Tab1:Select()
+
+-- HIỆN CHỮ
+Tab1:Paragraph({
+    Title = "đm xin cc ",
+    Desc = "có làm mới có ăn"
+})

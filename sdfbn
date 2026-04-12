@@ -1,0 +1,53 @@
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+WindUI:SetTheme("Dark")
+
+local Window = WindUI:CreateWindow({
+    Title = "TA Hub UI",
+    Author = "Clean Version",
+    Size = UDim2.fromOffset(580, 400),
+    Transparent = true,
+})
+
+-- TAB INFO
+local Tab1 = Window:Tab({
+    Title = "Thông tin",
+})
+
+Tab1:Select() -- mở tab ngay
+
+--------------------------------------------------
+-- ẢNH HIỆN NGAY + VIỀN TÍM
+--------------------------------------------------
+
+local ImageFrame = Instance.new("Frame")
+ImageFrame.Parent = game.CoreGui
+ImageFrame.Size = UDim2.new(0, 320, 0, 220)
+ImageFrame.Position = UDim2.new(0.5, -160, 0.5, -110)
+ImageFrame.BackgroundColor3 = Color3.fromRGB(170, 0, 255) -- viền tím
+ImageFrame.BorderSizePixel = 0
+
+local UICorner = Instance.new("UICorner", ImageFrame)
+UICorner.CornerRadius = UDim.new(0, 12)
+
+local Padding = Instance.new("UIPadding", ImageFrame)
+Padding.PaddingTop = UDim.new(0, 4)
+Padding.PaddingBottom = UDim.new(0, 4)
+Padding.PaddingLeft = UDim.new(0, 4)
+Padding.PaddingRight = UDim.new(0, 4)
+
+local ImageLabel = Instance.new("ImageLabel")
+ImageLabel.Parent = ImageFrame
+ImageLabel.Size = UDim2.new(1, 0, 1, 0)
+ImageLabel.BackgroundTransparency = 1
+ImageLabel.Image = "rbxassetid://1234567890" -- thay ID ảnh
+
+local UICorner2 = Instance.new("UICorner", ImageLabel)
+UICorner2.CornerRadius = UDim.new(0, 10)
+
+-- viền glow nhẹ
+local Stroke = Instance.new("UIStroke", ImageFrame)
+Stroke.Color = Color3.fromRGB(170, 0, 255)
+Stroke.Thickness = 2
+
+--------------------------------------------------

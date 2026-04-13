@@ -886,7 +886,7 @@ function bearlib:MakeWindow(Configs)
         Position = UDim2.new(1, -10, 0.5),
         AnchorPoint = Vector2.new(1, 0.5),
         BackgroundTransparency = 1,
-        Image = "rbxassetid://10747384394",
+        Image = "rbxassetid://126343729029435",
         AutoButtonColor = false,
         Name = "Close"
     })
@@ -896,7 +896,7 @@ function bearlib:MakeWindow(Configs)
         Position = UDim2.new(1, -35, 0.5),
         AnchorPoint = Vector2.new(1, 0.5),
         BackgroundTransparency = 1,
-        Image = "rbxassetid://10734896206",
+        Image = "rbxassetid://126343729029435",
         ImageColor3 = Theme["Color Text"],
         AutoButtonColor = false,
         Name = "Minimize"
@@ -907,7 +907,7 @@ function bearlib:MakeWindow(Configs)
         Position = UDim2.new(1, -60, 0.5),
         AnchorPoint = Vector2.new(1, 0.5),
         BackgroundTransparency = 1,
-        Image = "rbxassetid://10734943674",
+        Image = "rbxassetid://126343729029435",
         ImageColor3 = Theme["Color Text"],
         Name = "Search"
     })
@@ -1042,13 +1042,13 @@ function bearlib:MakeWindow(Configs)
         WaitClick = true
         
         if Minimized then
-            MinimizeButton.Image = "rbxassetid://10734896206"
+            MinimizeButton.Image = "rbxassetid://126343729029435"
             CreateTween({MainFrame, "Size", SaveSize, 0.25, true})
             ControlSize1.Visible = true
             ControlSize2.Visible = true
             Minimized = false
         else
-            MinimizeButton.Image = "rbxassetid://10734924532"
+            MinimizeButton.Image = "rbxassetid://126343729029435"
             SaveSize = MainFrame.Size
             ControlSize1.Visible = false
             ControlSize2.Visible = false
@@ -1498,7 +1498,7 @@ function bearlib:MakeWindow(Configs)
                 Position = UDim2.new(1, -10, 0.5),
                 AnchorPoint = Vector2.new(1, 0.5),
                 BackgroundTransparency = 1,
-                Image = "rbxassetid://10709791437",
+                Image = "rbxassetid://126343729029435",
                 ZIndex = 5
             })
             
@@ -1658,7 +1658,7 @@ function bearlib:MakeWindow(Configs)
                 Size = UDim2.new(0, 15, 0, 15),
                 Position = UDim2.new(0, -5, 0.5),
                 AnchorPoint = Vector2.new(1, 0.5),
-                Image = "rbxassetid://10709791523",
+                Image = "rbxassetid://126343729029435",
                 BackgroundTransparency = 1,
                 ZIndex = 5
             })
@@ -1710,7 +1710,7 @@ function bearlib:MakeWindow(Configs)
                 CreateTween({Arrow, "Rotation", 0, 0.2})
                 CreateTween({DropFrame, "Size", UDim2.new(0, 152, 0, 0), 0.2, true})
                 CreateTween({Arrow, "ImageColor3", Color3.fromRGB(255, 255, 255), 0.2})
-                Arrow.Image = "rbxassetid://10709791523"
+                Arrow.Image = "rbxassetid://126343729029435"
                 NoClickFrame.Visible = false
                 WaitClick = false
             end
@@ -1737,13 +1737,13 @@ function bearlib:MakeWindow(Configs)
                 if WaitClick then return end
                 WaitClick = true
                 if NoClickFrame.Visible then
-                    Arrow.Image = "rbxassetid://10709791523"
+                    Arrow.Image = "rbxassetid://126343729029435"
                     CreateTween({Arrow, "ImageColor3", Color3.fromRGB(255, 255, 255), 0.2})
                     CreateTween({DropFrame, "Size", UDim2.new(0, 152, 0, 0), 0.2, true})
                     NoClickFrame.Visible = false
                 else
                     NoClickFrame.Visible = true
-                    Arrow.Image = "rbxassetid://10709790948"
+                    Arrow.Image = "rbxassetid://126343729029435"
                     CreateTween({Arrow, "ImageColor3", Theme["Color Theme"], 0.2})
                     CreateTween({DropFrame, "Size", GetFrameSize(), 0.2, true})
                 end
@@ -2186,7 +2186,7 @@ function bearlib:MakeWindow(Configs)
                 Size = UDim2.new(0, 12, 0, 12),
                 Position = UDim2.new(0, -5, 0.5),
                 AnchorPoint = Vector2.new(1, 0.5),
-                Image = "rbxassetid://15637081879",
+                Image = "rbxassetid://126343729029435",
                 BackgroundTransparency = 1,
                 ZIndex = 5
             })
@@ -2600,7 +2600,7 @@ function bearlib:MakeWindow(Configs)
                 local VerifyIcon = Create("ImageLabel", Card, {
                     Size = UDim2.fromOffset(16, 16),
                     Position = UDim2.new(0, 75 + NameLabel.TextBounds.X + 5, 0, 50),
-                    Image = "rbxassetid://10709752907",
+                    Image = "rbxassetid://126343729029435",
                     ImageColor3 = Color3.fromRGB(60, 140, 255),
                     BackgroundTransparency = 1,
                     ZIndex = 4
@@ -2869,7 +2869,7 @@ function bearlib:MakeWindow(Configs)
                 local VerifyIcon = Create("ImageLabel", Card, {
                     Size = UDim2.fromOffset(14, 14),
                     Position = UDim2.new(0, 65 + NameLabel.TextBounds.X + 4, 0, 52),
-                    Image = "rbxassetid://10709752907",
+                    Image = "rbxassetid://126343729029435",
                     ImageColor3 = Color3.fromRGB(60, 140, 255),
                     BackgroundTransparency = 1,
                     ZIndex = 4
@@ -3038,7 +3038,7 @@ function bearlib:MakeWindow(Configs)
         ToggleButton.Name = "ToggleButton"
         ToggleButton.Size = UDim2.new(0, 50, 0, 50)
         ToggleButton.Position = UDim2.new(0.12, 0, 0.12, 0)
-        ToggleButton.Image = "rbxassetid://108449485047823"
+        ToggleButton.Image = "rbxassetid://126343729029435"
         ToggleButton.BackgroundColor3 = Theme["Color Hub 2"]
         ToggleButton.BackgroundTransparency = 0.2
         ToggleButton.Active = true

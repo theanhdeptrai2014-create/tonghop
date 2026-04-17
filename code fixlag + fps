@@ -1,0 +1,146 @@
+-- =============================================================
+-- 🦖 PREHISTORIC GRAPHICS V5 + FPS COUNTER (SAFE EDITION)
+-- =============================================================
+
+local Lighting = game:GetService("Lighting")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local workspace = game:GetService("Workspace")
+local UserInputService = game:GetService("UserInputService")
+
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+-- 1. TỐI ƯU RENDER (AN TOÀN)
+pcall(function()
+    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+end)
+
+Lighting.GlobalShadows = false
+Lighting.FogEnd = 9e9
+Lighting.Brightness = 1
+
+-- 2. TỐI ƯU OBJECT
+local function Optimize(v)
+    if v:IsA("BasePart") then
+        v.Material = Enum.Material.Plastic
+        v.CastShadow = false
+        v.Reflectance = 0
+    elseif v:IsA("Decal") or v:IsA("Texture") then
+        v.Transparency = 1
+    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Beam") then
+        v.Enabled = false
+    end
+end
+
+-- Scan map nhẹ
+task.spawn(function()
+    for i, v in ipairs(workspace:GetDescendants()) do
+        Optimize(v)
+        if i % 500 == 0 then
+            RunService.Heartbeat:Wait()
+        end
+    end
+end)
+
+-- 3. ẨN PLAYER KHÁC (NHẸ NHÀNG HƠN)
+local function CleanCharacter(char)
+    task.delay(1, function()
+        if char and char ~= LocalPlayer.Character then
+            for _, v in ipairs(char:GetDescendants()) do
+                if v:IsA("BasePart") then
+                    v.Transparency = 0.7 -- không ẩn hoàn toàn
+                    v.CanCollide = false
+                end
+            end
+        end
+    end)
+end
+
+Players.PlayerAdded:Connect(function(plr)
+    plr.CharacterAdded:Connect(CleanCharacter)
+end)
+
+for _, plr in ipairs(Players:GetPlayers()) do
+    if plr.Character then CleanCharacter(plr.Character) end
+end
+
+-- 4. TỐI ƯU UI
+local function OptimizeUI()
+    local PlayerGui = LocalPlayer:FindFirstChild("PlayerGui")
+    if PlayerGui then
+        for _, v in ipairs(PlayerGui:GetDescendants()) do
+            if v:IsA("ImageLabel") then
+                v.ImageTransparency = 0.5
+            end
+        end
+    end
+end
+OptimizeUI()
+
+-- 5. CPU BREATHING
+local isFocused = true
+UserInputService.WindowFocusReleased:Connect(function() isFocused = false end)
+UserInputService.WindowFocused:Connect(function() isFocused = true end)
+
+RunService.RenderStepped:Connect(function()
+    if setfpscap then
+        if not isFocused then
+            setfpscap(15)
+        else
+            setfpscap(60)
+        end
+    end
+end)
+
+-- 6. GARBAGE COLLECTOR
+task.spawn(function()
+    while true do
+        local mem = game:GetService("Stats"):GetTotalMemoryUsageMb()
+        if mem > 800 then
+            collectgarbage("collect")
+        else
+            collectgarbage("step", 100)
+        end
+        task.wait(15)
+    end
+end)
+
+-- 7. TERRAIN TỐI GIẢN (FIX LỖI)
+local terrain = workspace:FindFirstChildOfClass("Terrain")
+if terrain then
+    terrain.WaterWaveSize = 0
+    terrain.WaterWaveSpeed = 0
+    terrain.WaterTransparency = 1
+    terrain.Decoration = false
+end
+
+-- ================= FPS TEXT =================
+local gui = Instance.new("ScreenGui")
+gui.Name = "FPS_UI"
+gui.Parent = game.CoreGui
+
+local text = Instance.new("TextLabel")
+text.Parent = gui
+text.Position = UDim2.new(0, 10, 0, 10)
+text.Size = UDim2.new(0, 120, 0, 25)
+text.BackgroundTransparency = 1
+text.TextColor3 = Color3.fromRGB(0,255,0)
+text.Font = Enum.Font.GothamBold
+text.TextSize = 14
+text.TextXAlignment = Enum.TextXAlignment.Left
+
+local frames = 0
+local last = tick()
+
+RunService.RenderStepped:Connect(function()
+    frames += 1
+    if tick() - last >= 1 then
+        text.Text = "FPS: "..frames
+        frames = 0
+        last = tick()
+    end
+end)
+-- ===========================================
+
+print("🦖 PREHISTORIC V5 + FPS ENABLED 🚀")

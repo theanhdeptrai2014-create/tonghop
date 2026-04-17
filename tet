@@ -8,7 +8,7 @@ local Services = setmetatable({}, {
 
 
 local HttpService = Services.HttpService
-local FolderName = "Nhatan hub | Farm"
+local FolderName = "Kanexis Hub V2 | Farm"
 local FileName = "Settings.json"
 local FullPath = FolderName .. "/" .. FileName
 
@@ -2328,9 +2328,9 @@ end
 local AttackDelays = {
     ["Normal Attack"] = 0.25,
     ["Fast Attack"] = 0.15,
-    ["Super Attack"] = 0.05,
-    ["Bear Attack"] = 0.1,
-    ["Super Bear Attack"] = 0.01,
+    ["Super Attack"] = 0.15,
+    ["Kanexis Attack"] = 0.1,
+    ["Super Kanexis Attack"] = 0.01,
 }
 
 local function StopAllAttacks()
@@ -2638,28 +2638,32 @@ local function performClick()
     
     getgenv().AutoClickShootSettings.LastClickTime = currentTime
 end
---đây là ui chính của script--
-local bearlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/zendevcodexlua-bit/Ui/refs/heads/main/Kanexis-Library"))()
-local Window = bearlib:MakeWindow({
-    Title = "TAZz Hub | Farm",
-    SubTitle = "by TAZz",
+
+local kanexislib = loadstring(game:HttpGet("https://raw.githubusercontent.com/zendevcodexlua-bit/Ui/refs/heads/main/Kanexis-Library"))()
+local Window = kanexislib:MakeWindow({
+    Title = "Kanexis Hub V2 | Blox Fruits ",
+    SubTitle = "by Minh Duc",
     SaveFolder = true,
-    Image = "82107905019656"
+    Image = "126343729029435"
 })
 
 -- Hiển thị thông báo UI đã tải xong
 task.spawn(function()
     task.wait(2)
-    bearlib:Notify({
-        Title = "TAZz Hub",
-        Message = "tải xog r ",
-        Duration = 10
+    kanexislib:Notify({
+        Title = "Kanexis Hub V2",
+        Message = "Script Load Download Completed",
+        Duration = 5
     })
 end)
 
 ------ Tab
+local v0 = Window:MakeTab({
+    Title = "Info/Group",
+    Icon = "rbxassetid://73132811772878"
+})
 local v1 = Window:MakeTab({
-    Title = "Status/Server",
+    Title = "Status/Sever",
     Icon = "rbxassetid://7040410130"
 })
 local v2 = Window:MakeTab({
@@ -2716,56 +2720,10 @@ local v14 = Window:MakeTab({
     Icon = "rbxassetid://10734952479"
 })
 local v15 = Window:MakeTab({
-    Title = "Setting",
+    Title = "Settings",
     Icon = "rbxassetid://10734950309"
 })
---================hết============--
---=phần dưới là chức năng=--TAZz
-v0:AddProfile({
-    Name = "TAZz ☑",             
-    Bio = "101000101010010100101'S", 
-    Avatar = "rbxassetid://75089236463451", 
-    Cover = "rbxassetid://113942234405258", 
-    Verified = true 
-})
-v0:AddSingleDiscordCard({
-"Huy Script 🇻🇳",
-        "Follow our TikTok channel for the latest updates!!!",
-        "rbxassetid://75089236463451",
-        "rbxassetid://125520177394706",
-        2000,
-        10000,
-        "https://tiktok.me/group/ZSm9FrLKD/"
-})
 
-v0:AddParagraph({
-    "Thông báo",
-    "•TAZz Hub\n• Script by TAZz\n• Creation Date: 7-6-2026\n• Last updated date: 7-6-2026\n• Aura gun hiện chưa bắn được thuyền và leviathan"
-})
-
--- 1. Tạo Discord Invite Container với 2 card
-local discordContainer = v0:AddDiscordInvite({
-    -- Card 1
-    {
-        "Join the TikTok Group",
-        "Follow our TikTok channel for the latest updates!!!",
-        "rbxassetid://134852113716171",
-        "rbxassetid://84636833673111",
-        500,
-        1500,
-        "https://tiktok.me/group/ZSm9FrLKD/"
-    },
-    -- Card 2
-    {
-        "Join the Discord group",
-        "Join the Discord group to stay updated with the latest announcements.",
-        "rbxassetid://134852113716171",
-        "rbxassetid://123427419242741",
-        250,
-        1000,
-        "https://discord.gg/4XtcBYZ89"
-    }
-})
 
 local Time = v1:AddParagraph({
     Title = "Time Zone",
@@ -3099,7 +3057,7 @@ v1:AddButton({
 
 v4:AddDropdown({
     Name = "Select Attack Mode",
-    Options = {"Normal Attack", "Fast Attack", "Super Attack", "Bear Attack", "Super Bear Attack"},
+    Options = {"Normal Attack", "Fast Attack", "Super Attack", "Kanexis Attack", "Super Kanexis Attack"},
     Default = "Fast Attack",
     Multi = false,
     Callback = function(mode)
@@ -4656,7 +4614,7 @@ spawn(function()
 
                         MousePos = mob.HumanoidRootPart.Position
 
-                        -- Sử dụng logic từ G.Mas của Gravity Hub nhưng đã được sửa lỗi
+                        -- Sử dụng logic từ G.Mas của Kanexis Hub nhưng đã được sửa lỗi
                         if not mob:GetAttribute("Locked") then
                             mob:SetAttribute("Locked", mob.HumanoidRootPart.CFrame)
                         end
@@ -5150,7 +5108,7 @@ task.spawn(function()
 end)
 
 -- =========================================================
--- AUTO FISHING SYSTEM (Ported from Bear Hub)
+-- AUTO FISHING SYSTEM (Ported from Kanexis Hub V2)
 -- =========================================================
 v5:AddSection({"Fishing"})
 
@@ -5294,8 +5252,8 @@ task.spawn(function()
                         char.Humanoid:EquipTool(rodInBag)
                         equippedTool = rodInBag
                     else
-                        -- Sử dụng thông báo của bearlib
-                        bearlib:Notify({
+                        -- Sử dụng thông báo của kanexislib
+                        kanexislib:Notify({
                             Title = "Auto Fish",
                             Message = "please equip: " .. tostring(_G.SelectedRod),
                             Duration = 3
@@ -5329,8 +5287,8 @@ task.spawn(function()
                         task.wait(0.1)
                         FishingRequest:InvokeServer("Catch", 1)
                         
-                        -- Sử dụng thông báo của bearlib khi câu được cá
-                        bearlib:Notify({
+                        -- Sử dụng thông báo của kanexislib khi câu được cá
+                        kanexislib:Notify({
                             Title = "Auto Fish",
                             Message = "New item caught",
                             Duration = 3
@@ -6091,7 +6049,7 @@ if World3 then
         pcall(function()
             while wait(Sec) do
                 if _G.Auto_Rainbow_Haki then
-                    -- Copy logic Rainbow Haki từ file Bear hub.txt (dòng 2058-2154) vào đây nếu cần
+                    -- Copy logic Rainbow Haki từ file Kanexis hub.txt (dòng 2058-2154) vào đây nếu cần
                     -- Đoạn này khá dài, bạn có thể thêm sau nếu muốn
                 end;
             end;
@@ -6881,7 +6839,7 @@ v6:AddButton({
             Lighting.FogEnd = 9000000000
             Lighting.Brightness = 2
             
-            bearlib:Notify({
+            kanexislib:Notify({
                 Title = "Lighting",
                 Message = "Removed fog effects",
                 Duration = 3
@@ -6908,7 +6866,7 @@ v6:AddButton({
                     
                     replicated.Remotes.CommF_:InvokeServer("BuyBoat", _G.SelectedBoat)
                     
-                    bearlib:Notify({
+                    kanexislib:Notify({
                         Title = "Boat Shop",
                         Message = "Purchased: " .. tostring(_G.SelectedBoat),
                         Duration = 3
@@ -6916,7 +6874,7 @@ v6:AddButton({
                 end
             end)
         else
-            bearlib:Notify({
+            kanexislib:Notify({
                 Title = "Boat Shop",
                 Message = "Please select a boat first",
                 Duration = 3
@@ -7967,7 +7925,7 @@ v7:AddButton({
         pcall(function()
             local CraftRemote = replicated.Modules.Net["RF/Craft"]
             CraftRemote:InvokeServer("PossibleHardcode", "Volcanic Magnet")
-            bearlib:Notify({
+            kanexislib:Notify({
                 Title = "Crafting",
                 Message = "Attempted to craft Volcanic Magnet",
                 Duration = 3
@@ -8830,7 +8788,7 @@ v8:AddButton({
             replicated.Remotes.CommF_:InvokeServer("RaceV4Progress", "Teleport")
             replicated.Remotes.CommF_:InvokeServer("RaceV4Progress", "Continue")
             
-            bearlib:Notify({
+            kanexislib:Notify({
                 Title = "Race V4",
                 Message = "Talked with Stone",
                 Duration = 3
@@ -9471,7 +9429,7 @@ v9:AddButton({
     Callback = function()
         pcall(function()
             StockParagraph:SetDesc(GetFruitStock())
-            bearlib:Notify({
+            kanexislib:Notify({
                 Title = "Fruit Stock",
                 Message = "Stock refreshed",
                 Duration = 2
@@ -9716,7 +9674,7 @@ v9:AddButton({
             local inStock, price = CheckSpecificFruit(_G.CheckFruit)
             if inStock then
                 FruitCheckResult:SetDesc("✅ " .. _G.CheckFruit .. " is in stock!\nPrice: $" .. formatNumber(price))
-                bearlib:Notify({
+                kanexislib:Notify({
                     Title = "Fruit Stock",
                     Message = _G.CheckFruit .. " is in stock!",
                     Duration = 5
@@ -9747,7 +9705,7 @@ task.spawn(function()
                 local inStock, price = CheckSpecificFruit(_G.CheckFruit)
                 if inStock then
                     FruitCheckResult:SetDesc("✅ " .. _G.CheckFruit .. " is in stock!\nPrice: $" .. formatNumber(price))
-                    bearlib:Notify({
+                    kanexislib:Notify({
                         Title = "Fruit Stock Alert!",
                         Message = _G.CheckFruit .. " is now in stock!\nPrice: $" .. formatNumber(price),
                         Duration = 10
@@ -11463,7 +11421,7 @@ local World2 = World2 or false
 local World3 = World3 or false
 
 -- Section chính cho Shop
-v14:AddSection({"Mua Melee V1"})
+v14:AddSection({"Buy Melee "})
 
 -- Danh sách Melee với tọa độ theo từng World
 local MeleeCoords = {
@@ -11499,20 +11457,20 @@ local MeleeCoords = {
             or nil
     },
     ["Superhuman"] = {
-        Key = "BuySuperhuman",
+        Key = "Buysuperhuman (Thượng Nhân Quyền)",
         NPC = "Martial Arts Master",
         Pos = World2 and CFrame.new(1374, 247, -5192) 
             or World3 and CFrame.new(-5004, 371, -3198) 
             or nil
     },
-    ["Death Step (Chân Đen V2)"] = {
+    ["Death Step (Tử Cước)"] = {
         Key = "BuyDeathStep",
         NPC = "Phoeyu, the Reformed",
         Pos = World2 and CFrame.new(6357, 296, -6762) 
             or World3 and CFrame.new(-4999, 314, -3221) 
             or nil
     },
-    ["Sharkman Karate (Võ Cá V2)"] = {
+    ["Sharkman Karate (Võ cá V2)"] = {
         Key = "BuySharkmanKarate",
         NPC = "Daigrock, the Sharkman",
         Pos = World2 and CFrame.new(-2602, 238, -10316) 
@@ -11529,12 +11487,12 @@ local MeleeCoords = {
         NPC = "Previous Hero",
         Pos = World3 and CFrame.new(-10371, 331, -10131) or nil
     },
-    ["Godhuman"] = {
+    ["Godhuman (Thần Diệt Quyền)"] = {
         Key = "BuyGodhuman",
         NPC = "Ancient Monk",
         Pos = World3 and CFrame.new(-13776, 334, -9879) or nil
     },
-    ["Sanguine Art (Võ Quỷ)"] = {
+    ["Sanguine Art (Huyết Quỷ Thuật)"] = {
         Key = "BuySanguineArt",
         NPC = "Shafi",
         Pos = World3 and CFrame.new(-16353, 160, 99) or nil
@@ -11611,8 +11569,8 @@ v14:AddToggle({
 
                 local data = MeleeCoords[SelectedMelee]
                 if not data or not data.Pos then
-                    bearlib:Notify({
-                        Title = "Bear Hub",
+                    kanexislib:Notify({
+                        Title = "Kanexis Hub V2",
                         Message = "Lỗi: Không tìm thấy toạ độ cho Melee này ở Sea hiện tại!",
                         Duration = 3
                     })
@@ -11637,8 +11595,8 @@ v14:AddToggle({
                         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(data.Key)
                         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", data.Key)
                         
-                        bearlib:Notify({
-                            Title = "Bear Hub",
+                        kanexislib:Notify({
+                            Title = "Kanexis Hub V2",
                             Message = "Đã mua: " .. SelectedMelee,
                             Duration = 2
                         })
@@ -11659,7 +11617,7 @@ v14:AddButton({
     Name = "Craft Dragonheart",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CraftItem", "Craft", "Dragonheart")
-        bearlib:Notify({Title = "Craft", Message = "Đã craft Dragonheart", Duration = 2})
+        kanexislib:Notify({Title = "Craft", Message = "Đã craft Dragonheart", Duration = 2})
     end
 })
 
@@ -11667,7 +11625,7 @@ v14:AddButton({
     Name = "Craft Dragonstorm",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CraftItem", "Craft", "Dragonstorm")
-        bearlib:Notify({Title = "Craft", Message = "Đã craft Dragonstorm", Duration = 2})
+        kanexislib:Notify({Title = "Craft", Message = "Đã craft Dragonstorm", Duration = 2})
     end
 })
 
@@ -11675,7 +11633,7 @@ v14:AddButton({
     Name = "Craft DinoHood",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CraftItem", "Craft", "DinoHood")
-        bearlib:Notify({Title = "Craft", Message = "Đã craft DinoHood", Duration = 2})
+        kanexislib:Notify({Title = "Craft", Message = "Đã craft DinoHood", Duration = 2})
     end
 })
 
@@ -11683,7 +11641,7 @@ v14:AddButton({
     Name = "Craft SharkTooth",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CraftItem", "Craft", "SharkTooth")
-        bearlib:Notify({Title = "Craft", Message = "Đã craft SharkTooth", Duration = 2})
+        kanexislib:Notify({Title = "Craft", Message = "Đã craft SharkTooth", Duration = 2})
     end
 })
 
@@ -11691,7 +11649,7 @@ v14:AddButton({
     Name = "Craft TerrorJaw",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CraftItem", "Craft", "TerrorJaw")
-        bearlib:Notify({Title = "Craft", Message = "Đã craft TerrorJaw", Duration = 2})
+        kanexislib:Notify({Title = "Craft", Message = "Đã craft TerrorJaw", Duration = 2})
     end
 })
 
@@ -11699,7 +11657,7 @@ v14:AddButton({
     Name = "Craft SharkAnchor",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CraftItem", "Craft", "SharkAnchor")
-        bearlib:Notify({Title = "Craft", Message = "Đã craft SharkAnchor", Duration = 2})
+        kanexislib:Notify({Title = "Craft", Message = "Đã craft SharkAnchor", Duration = 2})
     end
 })
 
@@ -11707,7 +11665,7 @@ v14:AddButton({
     Name = "Craft LeviathanCrown",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CraftItem", "Craft", "LeviathanCrown")
-        bearlib:Notify({Title = "Craft", Message = "Đã craft LeviathanCrown", Duration = 2})
+        kanexislib:Notify({Title = "Craft", Message = "Đã craft LeviathanCrown", Duration = 2})
     end
 })
 
@@ -11715,7 +11673,7 @@ v14:AddButton({
     Name = "Craft LeviathanShield",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CraftItem", "Craft", "LeviathanShield")
-        bearlib:Notify({Title = "Craft", Message = "Đã craft LeviathanShield", Duration = 2})
+        kanexislib:Notify({Title = "Craft", Message = "Đã craft LeviathanShield", Duration = 2})
     end
 })
 
@@ -11723,7 +11681,7 @@ v14:AddButton({
     Name = "Craft LeviathanBoat",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CraftItem", "Craft", "LeviathanBoat")
-        bearlib:Notify({Title = "Craft", Message = "Đã craft LeviathanBoat", Duration = 2})
+        kanexislib:Notify({Title = "Craft", Message = "Đã craft LeviathanBoat", Duration = 2})
     end
 })
 
@@ -11731,7 +11689,7 @@ v14:AddButton({
     Name = "Craft LegendaryScroll",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CraftItem", "Craft", "LegendaryScroll")
-        bearlib:Notify({Title = "Craft", Message = "Đã craft LegendaryScroll", Duration = 2})
+        kanexislib:Notify({Title = "Craft", Message = "Đã craft LegendaryScroll", Duration = 2})
     end
 })
 
@@ -11739,7 +11697,7 @@ v14:AddButton({
     Name = "Craft MythicalScroll",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CraftItem", "Craft", "MythicalScroll")
-        bearlib:Notify({Title = "Craft", Message = "Đã craft MythicalScroll", Duration = 2})
+        kanexislib:Notify({Title = "Craft", Message = "Đã craft MythicalScroll", Duration = 2})
     end
 })
 
@@ -11752,7 +11710,7 @@ v14:AddButton({
     Name = "Buy Geppo $10,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki", "Geppo")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Geppo", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Geppo", Duration = 2})
     end
 })
 
@@ -11760,7 +11718,7 @@ v14:AddButton({
     Name = "Buy Buso Haki $25,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki", "Buso")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Buso Haki", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Buso Haki", Duration = 2})
     end
 })
 
@@ -11768,7 +11726,7 @@ v14:AddButton({
     Name = "Buy Soru $25,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki", "Soru")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Soru", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Soru", Duration = 2})
     end
 })
 
@@ -11776,7 +11734,7 @@ v14:AddButton({
     Name = "Buy Observation Haki $750,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("KenTalk", "Buy")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Observation Haki", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Observation Haki", Duration = 2})
     end
 })
 
@@ -11790,7 +11748,7 @@ v14:AddButton({
     Name = "Buy Cutlass $1,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Cutlass")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Cutlass", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Cutlass", Duration = 2})
     end
 })
 
@@ -11798,7 +11756,7 @@ v14:AddButton({
     Name = "Buy Katana $1,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Katana")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Katana", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Katana", Duration = 2})
     end
 })
 
@@ -11806,7 +11764,7 @@ v14:AddButton({
     Name = "Buy Iron Mace $25,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Iron Mace")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Iron Mace", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Iron Mace", Duration = 2})
     end
 })
 
@@ -11814,7 +11772,7 @@ v14:AddButton({
     Name = "Buy Dual Katana $12,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Duel Katana")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Dual Katana", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Dual Katana", Duration = 2})
     end
 })
 
@@ -11822,7 +11780,7 @@ v14:AddButton({
     Name = "Buy Triple Katana $60,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Triple Katana")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Triple Katana", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Triple Katana", Duration = 2})
     end
 })
 
@@ -11830,7 +11788,7 @@ v14:AddButton({
     Name = "Buy Pipe $100,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Pipe")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Pipe", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Pipe", Duration = 2})
     end
 })
 
@@ -11838,7 +11796,7 @@ v14:AddButton({
     Name = "Buy Dual-Headed Blade $400,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Dual-Headed Blade")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Dual-Headed Blade", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Dual-Headed Blade", Duration = 2})
     end
 })
 
@@ -11846,7 +11804,7 @@ v14:AddButton({
     Name = "Buy Bisento $1,200,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Bisento")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Bisento", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Bisento", Duration = 2})
     end
 })
 
@@ -11854,7 +11812,7 @@ v14:AddButton({
     Name = "Buy Soul Cane $750,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Soul Cane")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Soul Cane", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Soul Cane", Duration = 2})
     end
 })
 
@@ -11862,7 +11820,7 @@ v14:AddButton({
     Name = "Buy Pole V2 5,000F",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("ThunderGodTalk")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Pole V2", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Pole V2", Duration = 2})
     end
 })
 
@@ -11871,7 +11829,7 @@ v14:AddButton({
     Name = "Buy Slingshot $5,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Slingshot")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Slingshot", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Slingshot", Duration = 2})
     end
 })
 
@@ -11879,7 +11837,7 @@ v14:AddButton({
     Name = "Buy Musket $8,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Musket")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Musket", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Musket", Duration = 2})
     end
 })
 
@@ -11887,7 +11845,7 @@ v14:AddButton({
     Name = "Buy Flintlock $10,500",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Flintlock")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Flintlock", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Flintlock", Duration = 2})
     end
 })
 
@@ -11895,7 +11853,7 @@ v14:AddButton({
     Name = "Buy Refined Slingshot $30,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Refined Flintlock") -- Sửa tên cho đúng
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Refined Slingshot", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Refined Slingshot", Duration = 2})
     end
 })
 
@@ -11903,7 +11861,7 @@ v14:AddButton({
     Name = "Buy Refined Flintlock $65,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Refined Flintlock")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Refined Flintlock", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Refined Flintlock", Duration = 2})
     end
 })
 
@@ -11911,7 +11869,7 @@ v14:AddButton({
     Name = "Buy Cannon $100,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Cannon")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Cannon", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Cannon", Duration = 2})
     end
 })
 
@@ -11920,7 +11878,7 @@ v14:AddButton({
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward", "Slingshot", "1")
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward", "Slingshot", "2")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Kabucha", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Kabucha", Duration = 2})
     end
 })
 
@@ -11928,7 +11886,7 @@ v14:AddButton({
     Name = "Buy Bizarre Rifle 250 Ectoplasm",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Ectoplasm", "Buy", 1)
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Bizarre Rifle", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Bizarre Rifle", Duration = 2})
     end
 })
 
@@ -11941,7 +11899,7 @@ v14:AddButton({
     Name = "Buy Black Cape $50,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Black Cape")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Black Cape", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Black Cape", Duration = 2})
     end
 })
 
@@ -11949,7 +11907,7 @@ v14:AddButton({
     Name = "Buy Swordsman Hat $150,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Swordsman Hat")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Swordsman Hat", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Swordsman Hat", Duration = 2})
     end
 })
 
@@ -11957,7 +11915,7 @@ v14:AddButton({
     Name = "Buy Tomoe Ring $500,000",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyItem", "Tomoe Ring")
-        bearlib:Notify({Title = "Shop", Message = "Đã mua Tomoe Ring", Duration = 2})
+        kanexislib:Notify({Title = "Shop", Message = "Đã mua Tomoe Ring", Duration = 2})
     end
 })
 
@@ -11970,7 +11928,7 @@ v14:AddButton({
     Name = "Đổi Tộc Ghoul",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Ectoplasm", "Change", 4)
-        bearlib:Notify({Title = "Race", Message = "Đã đổi sang Ghoul", Duration = 2})
+        kanexislib:Notify({Title = "Race", Message = "Đã đổi sang Ghoul", Duration = 2})
     end
 })
 
@@ -11978,7 +11936,7 @@ v14:AddButton({
     Name = "Đổi Tộc Cyborg",
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CyborgTrainer", "Buy")
-        bearlib:Notify({Title = "Race", Message = "Đã đổi sang Cyborg", Duration = 2})
+        kanexislib:Notify({Title = "Race", Message = "Đã đổi sang Cyborg", Duration = 2})
     end
 })
 
@@ -11987,7 +11945,7 @@ v14:AddButton({
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward", "Refund", "1")
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward", "Refund", "2")
-        bearlib:Notify({Title = "Stats", Message = "Đã Reset Stats", Duration = 2})
+        kanexislib:Notify({Title = "Stats", Message = "Đã Reset Stats", Duration = 2})
     end
 })
 
@@ -11996,7 +11954,7 @@ v14:AddButton({
     Callback = function()
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward", "Reroll", "1")
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward", "Reroll", "2")
-        bearlib:Notify({Title = "Race", Message = "Đã Random Race", Duration = 2})
+        kanexislib:Notify({Title = "Race", Message = "Đã Random Race", Duration = 2})
     end
 })
 
@@ -12022,7 +11980,7 @@ v15:AddButton({
         }
         local RedeemRemote = replicated.Remotes:FindFirstChild("Redeem")
         if not RedeemRemote then
-            bearlib:Notify({Title = "Error", Message = "Không tìm thấy remote Redeem", Duration = 3})
+            kanexislib:Notify({Title = "Error", Message = "Không tìm thấy remote Redeem", Duration = 3})
             return
         end
         for _, code in ipairs(Codes) do
@@ -12035,7 +11993,7 @@ v15:AddButton({
                 end
             end)
         end
-        bearlib:Notify({Title = "Success", Message = "Đã thử nhập tất cả mã", Duration = 3})
+        kanexislib:Notify({Title = "Success", Message = "Đã thử nhập tất cả mã", Duration = 3})
     end
 })
 
@@ -12184,7 +12142,7 @@ v15:AddButton({
                 end
             end)
         end
-        bearlib:Notify({Title = "Graphics", Message = "Đã chuyển sang chế độ Fast Mode", Duration = 2})
+        kanexislib:Notify({Title = "Graphics", Message = "Đã chuyển sang chế độ Fast Mode", Duration = 2})
     end
 })
 
@@ -12193,7 +12151,7 @@ v15:AddButton({
     Name = "Low CPU Mode",
     Callback = function()
         LowCpu()
-        bearlib:Notify({Title = "Optimization", Message = "Đã bật chế độ Low CPU", Duration = 2})
+        kanexislib:Notify({Title = "Optimization", Message = "Đã bật chế độ Low CPU", Duration = 2})
     end
 })
 
@@ -12210,7 +12168,7 @@ v15:AddButton({
                 end
             end
         end)
-        bearlib:Notify({Title = "Boats", Message = "Đã tăng tốc độ thuyền (phía client)", Duration = 2})
+        Kanexislib:Notify({Title = "Boats", Message = "Đã tăng tốc độ thuyền (phía client)", Duration = 2})
     end
 })
 
@@ -12223,7 +12181,7 @@ v15:AddButton({
             if Lighting:FindFirstChild("SeaTerrorCC") then Lighting.SeaTerrorCC:Destroy() end
             if Lighting:FindFirstChild("FantasySky") then Lighting.FantasySky:Destroy() end
         end)
-        bearlib:Notify({Title = "Fog", Message = "Đã xóa sương mù", Duration = 2})
+        Kanexislib:Notify({Title = "Fog", Message = "Đã xóa sương mù", Duration = 2})
     end
 })
 

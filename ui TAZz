@@ -10,7 +10,7 @@ local PlayerMouse = Player:GetMouse()
 
 local bearlib = {
     Themes = {
-        MinhDuc = {
+        QuangHuy = {
             ["Color Hub 1"] = ColorSequence.new({
                 ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
                 ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 0, 0)),
@@ -41,7 +41,7 @@ local bearlib = {
     Save = {
         UISize = {550, 380},
         TabSize = 160,
-        Theme = "MinhDuc"
+        Theme = "TAZz"
     },
     Settings = {},
     Connection = {},
@@ -121,7 +121,7 @@ local SetProps, SetChildren, InsertTheme, Create do
         end
     end
     
-    pcall(Save, "kanexis library v8.1.json")
+    pcall(Save, "bear library v8.1.json")
 end
 
 local Funcs = {} do
@@ -253,7 +253,7 @@ local GetFlag, SetFlag, CheckFlag do
 end
 
 local ScreenGui = Create("ScreenGui", CoreGui, {
-    Name = "kanexis Library v8.1",
+    Name = "bear Library v8.1",
 }, {
     Create("UIScale", {
         Scale = UIScale,
@@ -533,13 +533,13 @@ function bearlib:SetTheme(NewTheme)
     if not VerifyTheme(NewTheme) then return end
     
     bearlib.Save.Theme = NewTheme
-    SaveJson("kanexis library v8.1.json", bearlib.Save)
+    SaveJson("bear library v8.1.json", bearlib.Save)
     
     local OldTheme = Theme
     Theme = bearlib.Themes[NewTheme]
     
     if MainFrame then
-        if NewTheme == "MinhDuc" then
+        if NewTheme == "QuangHuy" then
             MainFrame.BackgroundTransparency = 0.03
         end
     end
@@ -654,8 +654,8 @@ local MinimizedIcon = nil
 local MinimizedTitle = nil
 
 function bearlib:MakeWindow(Configs)
-    local WTitle = Configs[1] or Configs.Name or Configs.Title or "kanexis Library v8.1"
-    local WMiniText = Configs[2] or Configs.SubTitle or "by : Minh Duc"
+    local WTitle = Configs[1] or Configs.Name or Configs.Title or "bear Library v8.1"
+    local WMiniText = Configs[2] or Configs.SubTitle or "by : Quang Huy"
     
     Settings.ScriptFile = Configs[3] or Configs.SaveFolder or false
     
@@ -757,7 +757,7 @@ function bearlib:MakeWindow(Configs)
         Position = UDim2.new(0, 0, 0.5),
         AnchorPoint = Vector2.new(0, 0.5),
         BackgroundTransparency = 1,
-        Image = "rbxassetid://138193155303205",
+        Image = "rbxassetid://126343729029435",
         ImageColor3 = Theme["Color Text"],
         Name = "MinimizedIcon"
     })
@@ -868,13 +868,13 @@ function bearlib:MakeWindow(Configs)
     ConnectSave(ControlSize1, function()
         if not Minimized then
             bearlib.Save.UISize = {MainFrame.Size.X.Offset, MainFrame.Size.Y.Offset}
-            SaveJson("kanexis library v8.1.json", bearlib.Save)
+            SaveJson("bear library v8.1.json", bearlib.Save)
         end
     end)
     
     ConnectSave(ControlSize2, function()
         bearlib.Save.TabSize = MainScroll.Size.X.Offset
-        SaveJson("kanexis library v8.1.json", bearlib.Save)
+        SaveJson("bear library v8.1.json", bearlib.Save)
     end)
     
     local ButtonsFolder = Create("Folder", TopBar, {
@@ -886,7 +886,7 @@ function bearlib:MakeWindow(Configs)
         Position = UDim2.new(1, -10, 0.5),
         AnchorPoint = Vector2.new(1, 0.5),
         BackgroundTransparency = 1,
-        Image = "rbxassetid://10747384394",
+        Image = "rbxassetid://126343729029435",
         AutoButtonColor = false,
         Name = "Close"
     })
@@ -896,7 +896,7 @@ function bearlib:MakeWindow(Configs)
         Position = UDim2.new(1, -35, 0.5),
         AnchorPoint = Vector2.new(1, 0.5),
         BackgroundTransparency = 1,
-        Image = "rbxassetid://10734896206",
+        Image = "rbxassetid://126343729029435",
         ImageColor3 = Theme["Color Text"],
         AutoButtonColor = false,
         Name = "Minimize"
@@ -907,7 +907,7 @@ function bearlib:MakeWindow(Configs)
         Position = UDim2.new(1, -60, 0.5),
         AnchorPoint = Vector2.new(1, 0.5),
         BackgroundTransparency = 1,
-        Image = "rbxassetid://10734943674",
+        Image = "rbxassetid://126343729029435",
         ImageColor3 = Theme["Color Text"],
         Name = "Search"
     })
@@ -1042,13 +1042,13 @@ function bearlib:MakeWindow(Configs)
         WaitClick = true
         
         if Minimized then
-            MinimizeButton.Image = "rbxassetid://10734896206"
+            MinimizeButton.Image = "rbxassetid://126343729029435"
             CreateTween({MainFrame, "Size", SaveSize, 0.25, true})
             ControlSize1.Visible = true
             ControlSize2.Visible = true
             Minimized = false
         else
-            MinimizeButton.Image = "rbxassetid://10734924532"
+            MinimizeButton.Image = "rbxassetid://126343729029435"
             SaveSize = MainFrame.Size
             ControlSize1.Visible = false
             ControlSize2.Visible = false
@@ -1498,7 +1498,7 @@ function bearlib:MakeWindow(Configs)
                 Position = UDim2.new(1, -10, 0.5),
                 AnchorPoint = Vector2.new(1, 0.5),
                 BackgroundTransparency = 1,
-                Image = "rbxassetid://10709791437",
+                Image = "rbxassetid://126343729029435",
                 ZIndex = 5
             })
             
@@ -1658,7 +1658,7 @@ function bearlib:MakeWindow(Configs)
                 Size = UDim2.new(0, 15, 0, 15),
                 Position = UDim2.new(0, -5, 0.5),
                 AnchorPoint = Vector2.new(1, 0.5),
-                Image = "rbxassetid://10709791523",
+                Image = "rbxassetid://126343729029435",
                 BackgroundTransparency = 1,
                 ZIndex = 5
             })
@@ -1710,7 +1710,7 @@ function bearlib:MakeWindow(Configs)
                 CreateTween({Arrow, "Rotation", 0, 0.2})
                 CreateTween({DropFrame, "Size", UDim2.new(0, 152, 0, 0), 0.2, true})
                 CreateTween({Arrow, "ImageColor3", Color3.fromRGB(255, 255, 255), 0.2})
-                Arrow.Image = "rbxassetid://138193155303205"
+                Arrow.Image = "rbxassetid://126343729029435"
                 NoClickFrame.Visible = false
                 WaitClick = false
             end
@@ -1737,13 +1737,13 @@ function bearlib:MakeWindow(Configs)
                 if WaitClick then return end
                 WaitClick = true
                 if NoClickFrame.Visible then
-                    Arrow.Image = "rbxassetid://138193155303205"
+                    Arrow.Image = "rbxassetid://126343729029435"
                     CreateTween({Arrow, "ImageColor3", Color3.fromRGB(255, 255, 255), 0.2})
                     CreateTween({DropFrame, "Size", UDim2.new(0, 152, 0, 0), 0.2, true})
                     NoClickFrame.Visible = false
                 else
                     NoClickFrame.Visible = true
-                    Arrow.Image = "rbxassetid://138193155303205"
+                    Arrow.Image = "rbxassetid://126343729029435"
                     CreateTween({Arrow, "ImageColor3", Theme["Color Theme"], 0.2})
                     CreateTween({DropFrame, "Size", GetFrameSize(), 0.2, true})
                 end
@@ -2186,7 +2186,7 @@ function bearlib:MakeWindow(Configs)
                 Size = UDim2.new(0, 12, 0, 12),
                 Position = UDim2.new(0, -5, 0.5),
                 AnchorPoint = Vector2.new(1, 0.5),
-                Image = "rbxassetid://138193155303205",
+                Image = "rbxassetid://126343729029435",
                 BackgroundTransparency = 1,
                 ZIndex = 5
             })
@@ -2600,7 +2600,7 @@ function bearlib:MakeWindow(Configs)
                 local VerifyIcon = Create("ImageLabel", Card, {
                     Size = UDim2.fromOffset(16, 16),
                     Position = UDim2.new(0, 75 + NameLabel.TextBounds.X + 5, 0, 50),
-                    Image = "rbxassetid://138193155303205",
+                    Image = "rbxassetid://126343729029435",
                     ImageColor3 = Color3.fromRGB(60, 140, 255),
                     BackgroundTransparency = 1,
                     ZIndex = 4
@@ -2869,7 +2869,7 @@ function bearlib:MakeWindow(Configs)
                 local VerifyIcon = Create("ImageLabel", Card, {
                     Size = UDim2.fromOffset(14, 14),
                     Position = UDim2.new(0, 65 + NameLabel.TextBounds.X + 4, 0, 52),
-                    Image = "rbxassetid://138193155303205",
+                    Image = "rbxassetid://126343729029435",
                     ImageColor3 = Color3.fromRGB(60, 140, 255),
                     BackgroundTransparency = 1,
                     ZIndex = 4
@@ -3031,14 +3031,14 @@ function bearlib:MakeWindow(Configs)
     task.spawn(function()
         task.wait(0.5)
         ToggleGui = Instance.new("ScreenGui")
-        ToggleGui.Name = "KanexisHub_Toggle_Circle"
+        ToggleGui.Name = "BearHub_Toggle_Circle"
         ToggleGui.Parent = CoreGui
         
         ToggleButton = Instance.new("ImageButton")
         ToggleButton.Name = "ToggleButton"
         ToggleButton.Size = UDim2.new(0, 50, 0, 50)
         ToggleButton.Position = UDim2.new(0.12, 0, 0.12, 0)
-        ToggleButton.Image = "rbxassetid://138193155303205"
+        ToggleButton.Image = "rbxassetid://126343729029435"
         ToggleButton.BackgroundColor3 = Theme["Color Hub 2"]
         ToggleButton.BackgroundTransparency = 0.2
         ToggleButton.Active = true
@@ -3057,7 +3057,7 @@ function bearlib:MakeWindow(Configs)
         Flag.Name = "VNFlagIcon"
         Flag.Parent = ToggleButton
         Flag.BackgroundTransparency = 1
-        Flag.Image = "rbxassetid://8817197632805"
+        Flag.Image = "rbxassetid://90723031696932"
         Flag.Size = UDim2.fromOffset(28, 18)
         Flag.AnchorPoint = Vector2.new(0.5, 0.5)
         Flag.Position = UDim2.new(1, -2, 0, 2)
@@ -3186,7 +3186,7 @@ local function CreateNotification(Icon, Title, Message, Duration)
     IconImage.Size = UDim2.new(1, 0, 1, 0)
     IconImage.BackgroundTransparency = 1
     IconImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    IconImage.Image = Icon or "rbxassetid://138193155303205"
+    IconImage.Image = Icon or "rbxassetid://126343729029435"
     IconImage.ImageColor3 = Color3.fromRGB(255, 255, 255)
     IconImage.ScaleType = Enum.ScaleType.Fit
     IconImage.BorderSizePixel = 0
@@ -3216,7 +3216,7 @@ local function CreateNotification(Icon, Title, Message, Duration)
     TitleLabel.TextSize = 15
     TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     TitleLabel.TextYAlignment = Enum.TextYAlignment.Top
-    TitleLabel.Text = Title or "Kanexis Hub"
+    TitleLabel.Text = Title or "Bear Hub"
     TitleLabel.ZIndex = 1003
     TitleLabel.TextStrokeTransparency = 0.3
     TitleLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
@@ -3318,9 +3318,9 @@ local function ProcessNotificationQueue()
 end
 
 function bearlib:Notify(Configs)
-    local Title = Configs.Title or Configs[1] or "kanexis Hub"
+    local Title = Configs.Title or Configs[1] or "Bear Hub"
     local Message = Configs.Message or Configs[2] or Configs.Text or ""
-    local Icon = Configs.Icon or "rbxassetid://138193155303205"
+    local Icon = Configs.Icon or "rbxassetid://126343729029435"
     local Duration = Configs.Duration or Configs.Time or 5
     
     table.insert(NotificationQueue, {
@@ -3527,7 +3527,7 @@ function bearlib:GetToggleColors()
 end
 
 function bearlib:ResetBorderColors()
-    local defaultTheme = self.Themes.MinhDuc
+    local defaultTheme = self.Themes.QuangHuy
     self.Themes[self.Save.Theme]["UI Border Color"] = defaultTheme["UI Border Color"]
     self.Themes[self.Save.Theme]["Color Discord Border"] = defaultTheme["Color Discord Border"]
     self.Themes[self.Save.Theme]["Color Profile Border"] = defaultTheme["Color Profile Border"]
@@ -3561,7 +3561,7 @@ function bearlib:ResetBorderColors()
 end
 
 function bearlib:ResetToggleColors()
-    local defaultTheme = self.Themes.MinhDuc
+    local defaultTheme = self.Themes.QuangHuy
     self.Themes[self.Save.Theme]["Color Toggle On"] = defaultTheme["Color Toggle On"]
     self.Themes[self.Save.Theme]["Color Toggle Off"] = defaultTheme["Color Toggle Off"]
     self.Themes[self.Save.Theme]["Color Toggle Knob On"] = defaultTheme["Color Toggle Knob On"]
@@ -3576,9 +3576,9 @@ end
 task.spawn(function()
     task.wait(2)
     bearlib:Notify({
-        Title = "Kanexis Library",
-        Message = "UI Kanexis Library Download Completed",
-        Duration = 5
+        Title = "TAZz Hub",
+        Message = "đã tải xong ui",
+        Duration = 10
     })
 end)
 

@@ -2639,7 +2639,7 @@ local function performClick()
     getgenv().AutoClickShootSettings.LastClickTime = currentTime
 end
 --đây là ui chính của script--
-local bearlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/theanhdeptrai2014-create/tonghop/refs/heads/main/ui%20TAZz"))()
+local bearlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/zendevcodexlua-bit/Ui/refs/heads/main/Kanexis-Library"))()
 local Window = bearlib:MakeWindow({
     Title = "TAZz Hub | Farm",
     SubTitle = "by TAZz",

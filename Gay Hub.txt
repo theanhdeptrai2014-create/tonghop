@@ -1710,41 +1710,110 @@ local rz;
 local az;
 local wz = {};
 local Fz = {
-		["Border Color"] = Color3.fromRGB(48, 25, 52),
-		["Click Effect Color"] = Color3.fromRGB(230, 230, 230),
-		["Setting Icon Color"] = Color3.fromRGB(230, 230, 230),
-		["Logo Image"] = "rbxassetid://136485684668174",
-		["Search Icon Color"] = Color3.fromRGB(255, 255, 255),
-		["Search Icon Highlight Color"] = Color3.fromRGB(48, 25, 52),
-		["GUI Text Color"] = Color3.fromRGB(230, 230, 230),
-		["Text Color"] = Color3.fromRGB(230, 230, 230),
-		["Placeholder Text Color"] = Color3.fromRGB(178, 178, 178),
-		["Title Text Color"] = Color3.fromRGB(48, 25, 52),
-		["Background Main Color"] = Color3.fromRGB(15, 15, 15),
-		["Background 1 Color"] = Color3.fromRGB(28, 28, 34),
-		["Background 1 Transparency"] = .25,
-		["Background 2 Color"] = Color3.fromRGB(90, 90, 90),
-		["Background 3 Color"] = Color3.fromRGB(20, 20, 20),
-		["Background Image"] = "",
-		["Page Selected Color"] = Color3.fromRGB(48, 25, 52),
-		["Section Text Color"] = Color3.fromRGB(48, 25, 52),
-		["Section Underline Color"] = Color3.fromRGB(48, 25, 52),
-		["Toggle Border Color"] = Color3.fromRGB(48, 25, 52),
-		["Toggle Checked Color"] = Color3.fromRGB(230, 230, 230),
-		["Toggle Desc Color"] = Color3.fromRGB(185, 185, 185),
-		["Button Color"] = Color3.fromRGB(35, 35, 35),
-		["Label Color"] = Color3.fromRGB(35, 35, 35),
-		["Dropdown Icon Color"] = Color3.fromRGB(230, 230, 230),
-		["Dropdown Selected Color"] = Color3.fromRGB(48, 25, 52),
-		["Dropdown Selected Check Color"] = Color3.fromRGB(48, 25, 52),
-		["Textbox Highlight Color"] = Color3.fromRGB(48, 25, 52),
-		["Box Highlight Color"] = Color3.fromRGB(48, 25, 52),
-		["Slider Line Color"] = Color3.fromRGB(45, 22, 67),
-		["Slider Highlight Color"] = Color3.fromRGB(48, 25, 52),
-		["Tween Animation 1 Speed"] = Rz and 0 or .25,
-		["Tween Animation 2 Speed"] = Rz and 0 or .5,
-		["Tween Animation 3 Speed"] = Rz and 0 or .1,
-		["Text Stroke Transparency"] = .5,
+["Border Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm (dark purple)
+
+["Click Effect Color"] = Color3.fromRGB(230, 230, 230), 
+-- trắng xám nhạt (light gray)
+
+["Setting Icon Color"] = Color3.fromRGB(230, 230, 230), 
+-- trắng xám nhạt
+
+["Logo Image"] = "rbxassetid://138193155303205", 
+-- ảnh logo
+
+["Search Icon Color"] = Color3.fromRGB(255, 255, 255), 
+-- trắng
+
+["Search Icon Highlight Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm
+
+["GUI Text Color"] = Color3.fromRGB(230, 230, 230), 
+-- trắng xám
+
+["Text Color"] = Color3.fromRGB(230, 230, 230), 
+-- trắng xám
+
+["Placeholder Text Color"] = Color3.fromRGB(178, 178, 178), 
+-- xám
+
+["Title Text Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm
+
+["Background Main Color"] = Color3.fromRGB(15, 15, 15), 
+-- đen gần như tuyệt đối
+
+["Background 1 Color"] = Color3.fromRGB(28, 28, 34), 
+-- xám đậm hơi xanh
+
+["Background 1 Transparency"] = .25, 
+-- độ mờ
+
+["Background 2 Color"] = Color3.fromRGB(90, 90, 90), 
+-- xám trung bình
+
+["Background 3 Color"] = Color3.fromRGB(20, 20, 20), 
+-- đen xám
+
+["Background Image"] = "", 
+-- không có ảnh
+
+["Page Selected Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm
+
+["Section Text Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm
+
+["Section Underline Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm
+
+["Toggle Border Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm
+
+["Toggle Checked Color"] = Color3.fromRGB(230, 230, 230), 
+-- trắng xám
+
+["Toggle Desc Color"] = Color3.fromRGB(185, 185, 185), 
+-- xám sáng
+
+["Button Color"] = Color3.fromRGB(35, 35, 35), 
+-- xám đậm
+
+["Label Color"] = Color3.fromRGB(35, 35, 35), 
+-- xám đậm
+
+["Dropdown Icon Color"] = Color3.fromRGB(230, 230, 230), 
+-- trắng xám
+
+["Dropdown Selected Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm
+
+["Dropdown Selected Check Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm
+
+["Textbox Highlight Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm
+
+["Box Highlight Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm
+
+["Slider Line Color"] = Color3.fromRGB(45, 22, 67), 
+-- tím xanh đậm
+
+["Slider Highlight Color"] = Color3.fromRGB(48, 25, 52), 
+-- tím đậm
+
+["Tween Animation 1 Speed"] = Rz and 0 or .25, 
+-- tốc độ animation
+
+["Tween Animation 2 Speed"] = Rz and 0 or .5, 
+-- tốc độ animation
+
+["Tween Animation 3 Speed"] = Rz and 0 or .1, 
+-- tốc độ animation
+
+["Text Stroke Transparency"] = .5, 
+-- độ mờ viền chữ
 	};
 dz.UIColor = Fz;
 dz.UIToggled = false;
@@ -1827,7 +1896,7 @@ local gz = Instance.new("ImageButton", nz.HideGui);
 gz.BorderSizePixel = 0;
 gz.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
 gz.AnchorPoint = Vector2.new(0, 1);
-gz.Image = "rbxassetid://136485684668174";
+gz.Image = "rbxassetid://138193155303205";
 gz.Size = UDim2.new(0, 50, 0, 50);
 gz.BorderColor3 = Color3.fromRGB(0, 0, 0);
 gz.Position = UDim2.new(.01, 0, .99, 0);
@@ -2074,7 +2143,7 @@ function Kz.CreateMain(Y)
 	F.BackgroundTransparency = 1.0;
 	F.Position = UDim2.new(0, 5, 0, dz.T1 and 5 or 0);
 	F.Size = UDim2.new(0, dz.T1 and 30 or 25, 0, dz.T1 and 15 or 25);
-	F.Image = "rbxassetid://136485684668174";
+	F.Image = "rbxassetid://138193155303205";
 	M.Name = "TextLabelMain";
 	M.Parent = w;
 	M.BackgroundColor3 = Color3.fromRGB(230, 230, 230);

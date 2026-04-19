@@ -1,0 +1,431 @@
+local fixlagfps = loadstring(game:HttpGet("https://raw.githubusercontent.com/theanhdeptrai2014-create/tonghop/refs/heads/main/fixx%20lag%20fps%20ESF"))()
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- ========== KEY DATA ==========
+local KEYS_1_DAY = {
+    ["FREE6185561855[VN]"] = true,
+    ["FREE6185561856[VN]"] = true,
+    ["FREE6185561857[VN]"] = true,
+    ["FREE6185561858[VN]"] = true,
+    ["FREE6185561859[VN]"] = true,
+    ["FREE6185561860[VN]"] = true,
+    ["FREE6185561861[VN]"] = true,
+    ["FREE6185561862[VN]"] = true,
+    ["FREE6185561863[VN]"] = true,
+    ["FREE6185561864[VN]"] = true,
+    ["FREE6185561865[VN]"] = true,
+    ["FREE6185561866[VN]"] = true,
+    ["FREE6185561867[VN]"] = true,
+    ["FREE6185561868[VN]"] = true,
+    ["FREE6185561869[VN]"] = true,
+    ["FREE6185561870[VN]"] = true,
+    ["FREE6185561871[VN]"] = true,
+    ["FREE6185561872[VN]"] = true,
+    ["FREE6185561873[VN]"] = true,
+    ["FREE6185561874[VN]"] = true,
+    ["FREE6185561875[VN]"] = true,
+    ["FREE6185561876[VN]"] = true,
+    ["FREE6185561877[VN]"] = true,
+    ["FREE6185561878[VN]"] = true,
+    ["FREE6185561879[VN]"] = true,
+    ["FREE6185561880[VN]"] = true,
+    ["FREE6185561881[VN]"] = true,
+    ["FREE6185561882[VN]"] = true,
+}
+
+local KEYS_2_DAYS = {
+    ["FREE6185561883[VN]"] = true,
+    ["FREE6185561884[VN]"] = true,
+    ["FREE6185561885[VN]"] = true,
+    ["FREE6185561886[VN]"] = true,
+    ["FREE6185561887[VN]"] = true,
+    ["FREE6185561888[VN]"] = true,
+    ["FREE6185561889[VN]"] = true,
+    ["FREE6185561890[VN]"] = true,
+    ["FREE6185561891[VN]"] = true,
+    ["FREE6185561892[VN]"] = true,
+    ["FREE6185561893[VN]"] = true,
+    ["FREE6185561894[VN]"] = true,
+}
+
+local INFINITE_KEY = "TAZz Hub"
+
+-- ========== COLORS ==========
+local PURPLE_DARK = Color3.fromRGB(30, 20, 50)
+local PURPLE_MAIN = Color3.fromRGB(120, 60, 180)
+local PURPLE_LIGHT = Color3.fromRGB(180, 100, 255)
+local PURPLE_ACCENT = Color3.fromRGB(150, 80, 220)
+
+-- ========== CREATE MAIN SCREENGUI ==========
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TAZzHubGUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = playerGui
+
+-- ========== KEY SYSTEM UI ==========
+local keyFrame = Instance.new("Frame")
+keyFrame.Name = "KeyFrame"
+keyFrame.Size = UDim2.new(0, 450, 0, 350)
+keyFrame.Position = UDim2.new(0.5, -225, 0.5, -175)
+keyFrame.BackgroundColor3 = PURPLE_DARK
+keyFrame.BorderSizePixel = 0
+keyFrame.Parent = screenGui
+
+local keyCorner = Instance.new("UICorner")
+keyCorner.CornerRadius = UDim.new(0, 15)
+keyCorner.Parent = keyFrame
+
+local keyStroke = Instance.new("UIStroke")
+keyStroke.Color = PURPLE_MAIN
+keyStroke.Thickness = 3
+keyStroke.Parent = keyFrame
+
+-- Background Image
+local keyBg = Instance.new("ImageLabel")
+keyBg.Name = "Background"
+keyBg.Size = UDim2.new(1, 0, 1, 0)
+keyBg.Position = UDim2.new(0, 0, 0, 0)
+keyBg.BackgroundTransparency = 1
+keyBg.Image = "rbxassetid://90124281920460"
+keyBg.ImageTransparency = 0.7
+keyBg.ZIndex = 0
+keyBg.Parent = keyFrame
+
+local keyBgCorner = Instance.new("UICorner")
+keyBgCorner.CornerRadius = UDim.new(0, 15)
+keyBgCorner.Parent = keyBg
+
+-- Logo Image
+local logo = Instance.new("ImageLabel")
+logo.Name = "Logo"
+logo.Size = UDim2.new(0, 80, 0, 80)
+logo.Position = UDim2.new(0.5, -40, 0, 20)
+logo.BackgroundTransparency = 1
+logo.Image = "rbxassetid://138193155303205"
+logo.Parent = keyFrame
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Name = "Title"
+title.Size = UDim2.new(1, 0, 0, 40)
+title.Position = UDim2.new(0, 0, 0, 110)
+title.BackgroundTransparency = 1
+title.Text = "TAZz Hub"
+title.TextColor3 = PURPLE_LIGHT
+title.TextSize = 32
+title.Font = Enum.Font.GothamBold
+logo.Parent = keyFrame
+
+-- Subtitle
+local subtitle = Instance.new("TextLabel")
+subtitle.Name = "Subtitle"
+subtitle.Size = UDim2.new(1, 0, 0, 25)
+subtitle.Position = UDim2.new(0, 0, 0, 150)
+subtitle.BackgroundTransparency = 1
+subtitle.Text = "Nhập key để tiếp tục"
+subtitle.TextColor3 = Color3.fromRGB(200, 180, 220)
+subtitle.TextSize = 16
+subtitle.Font = Enum.Font.Gotham
+subtitle.Parent = keyFrame
+
+-- Key Input
+local keyInput = Instance.new("TextBox")
+keyInput.Name = "KeyInput"
+keyInput.Size = UDim2.new(0.85, 0, 0, 50)
+keyInput.Position = UDim2.new(0.075, 0, 0, 190)
+keyInput.BackgroundColor3 = Color3.fromRGB(50, 35, 70)
+keyInput.BorderSizePixel = 0
+keyInput.Text = ""
+keyInput.PlaceholderText = "Nhập key tại đây..."
+keyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyInput.PlaceholderColor3 = Color3.fromRGB(150, 130, 170)
+keyInput.TextSize = 18
+keyInput.Font = Enum.Font.Gotham
+keyInput.Parent = keyFrame
+
+local inputCorner = Instance.new("UICorner")
+inputCorner.CornerRadius = UDim.new(0, 10)
+inputCorner.Parent = keyInput
+
+local inputStroke = Instance.new("UIStroke")
+inputStroke.Color = PURPLE_ACCENT
+inputStroke.Thickness = 1.5
+inputStroke.Parent = keyInput
+
+-- Submit Button
+local submitBtn = Instance.new("TextButton")
+submitBtn.Name = "SubmitBtn"
+submitBtn.Size = UDim2.new(0.85, 0, 0, 50)
+submitBtn.Position = UDim2.new(0.075, 0, 0, 255)
+submitBtn.BackgroundColor3 = PURPLE_MAIN
+submitBtn.BorderSizePixel = 0
+submitBtn.Text = "XÁC NHẬN KEY"
+submitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+submitBtn.TextSize = 18
+submitBtn.Font = Enum.Font.GothamBold
+submitBtn.Parent = keyFrame
+
+local btnCorner = Instance.new("UICorner")
+btnCorner.CornerRadius = UDim.new(0, 10)
+btnCorner.Parent = submitBtn
+
+-- Status Label
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Name = "StatusLabel"
+statusLabel.Size = UDim2.new(1, 0, 0, 30)
+statusLabel.Position = UDim2.new(0, 0, 0, 315)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text = ""
+statusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+statusLabel.TextSize = 14
+statusLabel.Font = Enum.Font.Gotham
+statusLabel.Parent = keyFrame
+
+-- ========== MAIN HUB UI (Hidden initially) ==========
+local mainHub = Instance.new("Frame")
+mainHub.Name = "MainHub"
+mainHub.Size = UDim2.new(0, 550, 0, 400)
+mainHub.Position = UDim2.new(0.5, -275, 0.5, -200)
+mainHub.BackgroundColor3 = PURPLE_DARK
+mainHub.BorderSizePixel = 0
+mainHub.Visible = false
+mainHub.Parent = screenGui
+
+local hubCorner = Instance.new("UICorner")
+hubCorner.CornerRadius = UDim.new(0, 15)
+hubCorner.Parent = mainHub
+
+local hubStroke = Instance.new("UIStroke")
+hubStroke.Color = PURPLE_MAIN
+hubStroke.Thickness = 3
+hubStroke.Parent = mainHub
+
+-- Hub Background
+local hubBg = Instance.new("ImageLabel")
+hubBg.Name = "Background"
+hubBg.Size = UDim2.new(1, 0, 1, 0)
+hubBg.BackgroundTransparency = 1
+hubBg.Image = "rbxassetid://90124281920460"
+hubBg.ImageTransparency = 0.8
+hubBg.ZIndex = 0
+hubBg.Parent = mainHub
+
+local hubBgCorner = Instance.new("UICorner")
+hubBgCorner.CornerRadius = UDim.new(0, 15)
+hubBgCorner.Parent = hubBg
+
+-- Hub Header
+local hubHeader = Instance.new("Frame")
+hubHeader.Name = "Header"
+hubHeader.Size = UDim2.new(1, 0, 0, 60)
+hubHeader.BackgroundColor3 = Color3.fromRGB(40, 25, 65)
+hubHeader.BorderSizePixel = 0
+hubHeader.Parent = mainHub
+
+local headerCorner = Instance.new("UICorner")
+headerCorner.CornerRadius = UDim.new(0, 15)
+headerCorner.Parent = hubHeader
+
+-- Hub Logo
+local hubLogo = Instance.new("ImageLabel")
+hubLogo.Name = "Logo"
+hubLogo.Size = UDim2.new(0, 45, 0, 45)
+hubLogo.Position = UDim2.new(0, 15, 0, 7)
+hubLogo.BackgroundTransparency = 1
+hubLogo.Image = "rbxassetid://138193155303205"
+hubLogo.Parent = hubHeader
+
+-- Hub Title
+local hubTitle = Instance.new("TextLabel")
+hubTitle.Name = "Title"
+hubTitle.Size = UDim2.new(0, 200, 0, 60)
+hubTitle.Position = UDim2.new(0, 70, 0, 0)
+hubTitle.BackgroundTransparency = 1
+hubTitle.Text = "TAZz Hub"
+hubTitle.TextColor3 = PURPLE_LIGHT
+hubTitle.TextSize = 28
+hubTitle.Font = Enum.Font.GothamBold
+hubTitle.TextXAlignment = Enum.TextXAlignment.Left
+hubTitle.Parent = hubHeader
+
+-- Close Button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Name = "CloseBtn"
+closeBtn.Size = UDim2.new(0, 35, 0, 35)
+closeBtn.Position = UDim2.new(1, -45, 0, 12)
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 60, 80)
+closeBtn.BorderSizePixel = 0
+closeBtn.Text = "X"
+closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeBtn.TextSize = 18
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.Parent = hubHeader
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.Parent = closeBtn
+
+-- Minimize Button
+local minBtn = Instance.new("TextButton")
+minBtn.Name = "MinBtn"
+minBtn.Size = UDim2.new(0, 35, 0, 35)
+minBtn.Position = UDim2.new(1, -90, 0, 12)
+minBtn.BackgroundColor3 = PURPLE_ACCENT
+minBtn.BorderSizePixel = 0
+minBtn.Text = "-"
+minBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+minBtn.TextSize = 22
+minBtn.Font = Enum.Font.GothamBold
+minBtn.Parent = hubHeader
+
+local minCorner = Instance.new("UICorner")
+minCorner.CornerRadius = UDim.new(0, 8)
+minCorner.Parent = minBtn
+
+-- Sidebar
+local sidebar = Instance.new("Frame")
+sidebar.Name = "Sidebar"
+sidebar.Size = UDim2.new(0, 140, 1, -70)
+sidebar.Position = UDim2.new(0, 10, 0, 65)
+sidebar.BackgroundColor3 = Color3.fromRGB(45, 30, 70)
+sidebar.BorderSizePixel = 0
+sidebar.Parent = mainHub
+
+local sideCorner = Instance.new("UICorner")
+sideCorner.CornerRadius = UDim.new(0, 10)
+sideCorner.Parent = sidebar
+
+-- Tab Buttons Container
+local tabsContainer = Instance.new("ScrollingFrame")
+tabsContainer.Name = "TabsContainer"
+tabsContainer.Size = UDim2.new(1, -10, 1, -10)
+tabsContainer.Position = UDim2.new(0, 5, 0, 5)
+tabsContainer.BackgroundTransparency = 1
+tabsContainer.ScrollBarThickness = 4
+tabsContainer.Parent = sidebar
+
+local tabsLayout = Instance.new("UIListLayout")
+tabsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+tabsLayout.Padding = UDim.new(0, 5)
+tabsLayout.Parent = tabsContainer
+
+-- Content Area
+local contentArea = Instance.new("Frame")
+contentArea.Name = "ContentArea"
+contentArea.Size = UDim2.new(1, -165, 1, -75)
+contentArea.Position = UDim2.new(0, 155, 0, 65)
+contentArea.BackgroundColor3 = Color3.fromRGB(40, 25, 65)
+contentArea.BorderSizePixel = 0
+contentArea.Parent = mainHub
+
+local contentCorner = Instance.new("UICorner")
+contentCorner.CornerRadius = UDim.new(0, 10)
+contentCorner.Parent = contentArea
+
+
+-- ========== TABS DATA ==========
+local tabs = {
+    {name = "🏠 Home", content = "Home"},
+    {name = "⚔️bloxfruits", content = "bloxfrtuits"},
+
+Tabs.Main0:AddButton({
+    Title = "🎵 TikTok Thế Anh",
+    Description = "tiktok.com/@ththunhong5",
+    Callback = function()
+        setclipboard("https://www.tiktok.com/@ththunhong5?_t=ZS-8wVlCAMZ1hH&_r=1")
+    end
+})
+
+Tabs.Blox:AddButton({
+    Title = "TA HUB",
+    Description = "Bấm để chạy Script Blox Fruits",
+    Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/theanhdeptrai2014-create/FAM/refs/heads/main/TA.lua"))()
+        print("Chạy TA Hub")
+    end
+})
+
+}
+
+
+-- ========== KEY VALIDATION ==========
+local function validateKey(key)
+    if key == INFINITE_KEY then
+        return "infinite", "VÔ HẠN....acmin"
+    elseif KEYS_2_DAYS[key] then
+        return "2days", "2 NGÀY"
+    elseif KEYS_1_DAY[key] then
+        return "1day", "1 NGÀY"
+    end
+    return nil, nil
+end
+
+-- Button hover effects
+submitBtn.MouseEnter:Connect(function()
+    TweenService:Create(submitBtn, TweenInfo.new(0.2), {BackgroundColor3 = PURPLE_LIGHT}):Play()
+end)
+
+submitBtn.MouseLeave:Connect(function()
+    TweenService:Create(submitBtn, TweenInfo.new(0.2), {BackgroundColor3 = PURPLE_MAIN}):Play()
+end)
+
+-- Submit key
+submitBtn.MouseButton1Click:Connect(function()
+    local key = keyInput.Text
+    
+    if key == "" then
+        statusLabel.Text = "⚠️ Vui lòng nhập key!"
+        statusLabel.TextColor3 = Color3.fromRGB(255, 200, 100)
+        return
+    end
+    
+    local keyType, durationText = validateKey(key)
+    
+    if keyType then
+        statusLabel.Text = "✅ KEY HỢP LỆ! (" .. durationText .. ")"
+        statusLabel.TextColor3 = Color3.fromRGB(100, 255, 100)
+        
+        TweenService:Create(keyFrame, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(40, 80, 40)}):Play()
+        
+        task.wait(0.8)
+        
+        -- Hide key frame, show main hub
+        TweenService:Create(keyFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back), {
+            Size = UDim2.new(0, 0, 0, 0),
+            Position = UDim2.new(0.5, 0, 0.5, 0)
+        }):Play()
+        
+        task.wait(0.5)
+        keyFrame.Visible = false
+        
+        -- Show main hub
+        mainHub.Visible = true
+        toggleBtn.Visible = true
+        
+        TweenService:Create(mainHub, TweenInfo.new(0.5, Enum.EasingStyle.Back), {
+            Size = UDim2.new(0, 550, 0, 400)
+        }):Play()
+    else
+        statusLabel.Text = "❌ KEY KHÔNG HỢP LỆ!"
+        statusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+        
+        local originalPos = keyFrame.Position
+        TweenService:Create(keyFrame, TweenInfo.new(0.05), {Position = UDim2.new(0.5, -235, 0.5, -175)}):Play()
+        task.wait(0.05)
+        TweenService:Create(keyFrame, TweenInfo.new(0.05), {Position = UDim2.new(0.5, -215, 0.5, -175)}):Play()
+        task.wait(0.05)
+        TweenService:Create(keyFrame, TweenInfo.new(0.05), {Position = originalPos}):Play()
+    end
+end)
+
+-- Enter to submit
+keyInput.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        submitBtn.MouseButton1Click:Fire()
+    end
+end)

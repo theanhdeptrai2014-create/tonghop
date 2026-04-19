@@ -1,0 +1,96 @@
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+-- ========== 1. HIỂN THỊ FPS ==========
+local fpsLabel = Instance.new("TextLabel")
+fpsLabel.Size = UDim2.new(0, 100, 0, 30)
+fpsLabel.Position = UDim2.new(0, 10, 0, 10) -- Góc trên bên trái
+fpsLabel.BackgroundTransparency = 1
+fpsLabel.TextColor3 = Color3.fromRGB(0, 255, 150) -- Màu xanh neon
+fpsLabel.TextSize = 18
+fpsLabel.Font = Enum.Font.GothamBold
+fpsLabel.Parent = screenGui -- Dùng chung screenGui của Hub nhé
+
+local lastUpdate = tick()
+local frameCount = 0
+RunService.RenderStepped:Connect(function()
+	frameCount = frameCount + 1
+	if tick() - lastUpdate >= 1 then
+		fpsLabel.Text = "FPS: " .. frameCount
+		frameCount = 0
+		lastUpdate = tick()
+	end
+end)
+
+-- ========== 2. HỆ THỐNG ESP (HIỆN NGƯỜI CHƠI) ==========
+local function CreateESP(plr)
+	local box = Instance.new("BillboardGui")
+	box.Name = "TAZz_ESP"
+	box.AlwaysOnTop = true
+	box.Size = UDim2.new(4, 0, 5, 0)
+	box.Adornee = nil
+
+	local nameLabel = Instance.new("TextLabel", box)
+	nameLabel.Size = UDim2.new(1, 0, 0.2, 0)
+	nameLabel.BackgroundTransparency = 1
+	nameLabel.TextColor3 = Color3.new(1, 1, 1)
+	nameLabel.TextSize = 12
+	nameLabel.Font = Enum.Font.GothamBold
+	nameLabel.TextStrokeTransparency = 0
+
+	local function UpdateESP()
+		RunService.RenderStepped:Connect(function()
+			if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") and plr.Character:FindFirstChild("Humanoid") then
+				local root = plr.Character.HumanoidRootPart
+				local hum = plr.Character.Humanoid
+				box.Adornee = root
+				box.Parent = playerGui
+
+				-- Tính khoảng cách
+				local dist = math.floor((LocalPlayer.Character.HumanoidRootPart.Position - root.Position).Magnitude)
+
+				-- Lấy Level (Dành cho Blox Fruits - Nếu game khác thì cần đổi tên Data)
+				local level = plr:FindFirstChild("Data") and plr.Data:FindFirstChild("Level") and plr.Data.Level.Value or "???"
+
+				-- Hiển thị thông tin
+				nameLabel.Text = string.format(
+					"%s\n[HP: %d/%d]\n[Dist: %dm] [Lv: %s]",
+					plr.Name,
+					hum.Health,
+					hum.MaxHealth,
+					dist,
+					tostring(level)
+				)
+
+				-- Đổi màu theo máu
+				if hum.Health < hum.MaxHealth * 0.3 then
+					nameLabel.TextColor3 = Color3.new(1, 0, 0) -- Máu thấp màu đỏ
+				else
+					nameLabel.TextColor3 = Color3.new(1, 1, 1)
+				end
+
+				box.Enabled = true
+			else
+				box.Enabled = false
+			end
+		end)
+	end
+	task.spawn(UpdateESP)
+end
+
+-- Chạy ESP cho tất cả người chơi
+for _, plr in pairs(Players:GetPlayers()) do
+	if plr ~= LocalPlayer then
+		CreateESP(plr)
+	end
+end
+
+Players.PlayerAdded:Connect(function(plr)
+	if plr ~= LocalPlayer then
+		CreateESP(plr)
+	end
+end)
+
+print("--- ĐÃ BẬT FPS & ESP PLAYER (TAZz HUB) ---")

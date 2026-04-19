@@ -4267,8 +4267,8 @@ function Kz.CreateMain(Y)
 	return V;
 end;
 local Cz = Kz.CreateMain({ Desc = "" });
-local TA = Cz.T({ Page_Name = "Farm", Page_Title = "Farm" });
-local vz = Cz.T({ Page_Name = "THÔNG TIN", Page_Title = "Farm" });
+local TA = Cz.T({ Page_Name = "THÔNG TIN", Page_Title = "Farm" });
+local vz = Cz.T({ Page_Name = "Farm", Page_Title = "Farm" });
 local mz = Cz.T({ Page_Name = "Config", Page_Title = "Config" });
 local yz = Cz.T({ Page_Name = "Fighting Style", Page_Title = "Fighting Style" });
 local bz = Cz.T({ Page_Name = "Items Farm", Page_Title = "Items Farm" });
@@ -4281,7 +4281,54 @@ local Tz = Cz.T({ Page_Name = "Combat PVP", Page_Title = "Combat PVP" });
 local kz = Cz.T({ Page_Name = "Teleport", Page_Title = "Teleport" });
 local Lz = Cz.T({ Page_Name = "Fruits", Page_Title = "Fruits" });
 local Pz = Cz.T({ Page_Name = "Shop", Page_Title = "Shop" });
-local jz = Cz.T({ Page_Name = "Misc", Page_Title = "Misc" });
+local jz = Cz.T({ Page_Name = "Misc", Page Title = "Misc" });
+local TA = TA1.CreateSection("Farm");
+--=phần dưới là chức năng=--TAZz
+v0:AddProfile({
+    Name = "TAZz ☑",             
+    Bio = "101000101010010100101'S", 
+    Avatar = "rbxassetid://75089236463451", 
+    Cover = "rbxassetid://113942234405258", 
+    Verified = true 
+})
+v0:AddSingleDiscordCard({
+"The Anh Script 🇻🇳",
+        "Follow our TikTok channel for the latest updates!!!",
+        "rbxassetid://75089236463451",
+        "rbxassetid://125520177394706",
+        2000,
+        10000,
+        "https://tiktok.me/group/ZSm9FrLKD/"
+})
+
+TA.CreateToggle({
+    "Thông báo",
+    "•TAZz Hub\n• Script by TAZz\n• Creation Date: 7-6-2026\n• Last updated date: 7-6-2026\n• Aura gun hiện chưa bắn được thuyền và leviathan"
+})
+
+-- 1. Tạo Discord Invite Container với 2 card
+local discordContainer = TA.CreateToggle({
+    -- Card 1
+    {
+        "Join the TikTok Group",
+        "Follow our TikTok channel for the latest updates!!!",
+        "rbxassetid://134852113716171",
+        "rbxassetid://84636833673111",
+        500,
+        1500,
+        "https://tiktok.me/group/ZSm9FrLKD/"
+    },
+    -- Card 2
+    {
+        "Join the Discord group",
+        "Join the Discord group to stay updated with the latest announcements.",
+        "rbxassetid://134852113716171",
+        "rbxassetid://123427419242741",
+        250,
+        1000,
+        "https://discord.gg/4XtcBYZ89"
+    }
+})
 local Gz = vz.CreateSection("Farm");
 Gz.CreateToggle({
 	Title = " Farm tự động",

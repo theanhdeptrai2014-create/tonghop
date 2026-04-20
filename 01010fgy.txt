@@ -10,15 +10,15 @@ local playerGui = player:WaitForChild("PlayerGui")
 
 -- Colors - Purple Theme (Tím đậm và nhạt)
 local COLORS = {
-	Purple = Color3.fromRGB(138, 43, 226),
-	PurpleNeon = Color3.fromRGB(148, 0, 211),
-	PurplePastel = Color3.fromRGB(216, 191, 216),
-	PurpleLight = Color3.fromRGB(221, 160, 221),
-	PurpleDark = Color3.fromRGB(75, 0, 130),
-	DeepCharcoal = Color3.fromRGB(30, 30, 35),
+	Purple = Color3.fromRGB(170, 85, 255),        -- tím chính (sáng, rõ)
+	PurpleNeon = Color3.fromRGB(200, 0, 255),     -- tím neon nổi (viền glow)
+	PurplePastel = Color3.fromRGB(230, 200, 255), -- tím nhạt dịu (ít bị bẩn màu)
+	PurpleLight = Color3.fromRGB(210, 140, 255),  -- tím sáng dùng cho button
+	PurpleDark = Color3.fromRGB(60, 0, 120),      -- tím đậm (nền phụ)
+	DeepCharcoal = Color3.fromRGB(20, 20, 25),    -- nền tối hơn (đỡ xám bẩn)
 	Black = Color3.fromRGB(0, 0, 0),
 	White = Color3.fromRGB(255, 255, 255),
-	Gray = Color3.fromRGB(50, 50, 55),
+	Gray = Color3.fromRGB(40, 40, 45),            -- xám mềm hơn
 }
 
 -- Create ScreenGui
@@ -87,7 +87,8 @@ titleLabel.BackgroundTransparency = 1
 titleLabel.Text = "TAZz Hub"
 titleLabel.TextColor3 = COLORS.PurpleDark
 titleLabel.TextSize = 18
-titleLabel.Font = Enum.Font.GothamBold
+titleLabel.Font = Enum.Font.Gotham
+titleLabel.TextScaled = true
 titleLabel.TextStrokeTransparency = 1
 titleLabel.Parent = toggleButton
 

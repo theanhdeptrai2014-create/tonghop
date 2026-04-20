@@ -1,6 +1,4 @@
--- TAZz Hub UI System - Dark Neon Style v2 (Fixed Text & Colors)
--- Updated by AI
-
+-- TAZz Hub UI System - Minimalist Circle Toggle
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -8,615 +6,144 @@ local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- Colors - Purple Neon Theme (Hệ màu Tím Đậm & Nhạt)
+-- Màu sắc Tím Đậm & Nhạt (Neon)
 local COLORS = {
-    MainNeon = Color3.fromRGB(190, 0, 255),    -- Tím sáng Neon (Dùng cho Border, Glow, Text chính)
-    MainDark = Color3.fromRGB(80, 0, 140),     -- Tím đậm (Dùng cho Background phụ, Button hovered)
-    BgCharcoal = Color3.fromRGB(20, 20, 22),   -- Charcoal siêu đậm (Background chính)
-    BgDarker = Color3.fromRGB(15, 15, 17),     -- Charcoal đậm hơn (Header)
-    TextLight = Color3.fromRGB(240, 230, 255), -- Tím pastel rất nhạt (Dùng cho Text)
-    White = Color3.fromRGB(255, 255, 255),
-    Black = Color3.fromRGB(0, 0, 0),
+    MainNeon = Color3.fromRGB(190, 0, 255),    -- Tím sáng Neon
+    MainDark = Color3.fromRGB(30, 0, 60),      -- Tím đậm
+    BgBlack = Color3.fromRGB(15, 15, 18),      -- Nền đen Charcoal
 }
 
--- Create ScreenGui
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "TAZzHubMain"
+local screenGui = Instance.new("ScreenGui", playerGui)
+screenGui.Name = "TAZzHub_Minimal"
 screenGui.ResetOnSpawn = false
-screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-screenGui.Parent = playerGui
 
 -- ============================================
--- TOGGLE BUTTON (Small UI) - FIXED Colors
+-- NÚT MỞ HÌNH TRÒN (ONLY CIRCLE WITH IMAGE)
 -- ============================================
-local toggleButton = Instance.new("TextButton")
-toggleButton.Name = "ToggleButton"
-toggleButton.Size = UDim2.new(0, 180, 0, 50)
-toggleButton.Position = UDim2.new(0, 20, 0.5, -25)
-toggleButton.BackgroundColor3 = COLORS.BgCharcoal -- Nền đậm
+local toggleButton = Instance.new("ImageButton") -- Dùng ImageButton để làm sạch
+toggleButton.Name = "CircleToggle"
+toggleButton.Size = UDim2.new(0, 55, 0, 55)
+toggleButton.Position = UDim2.new(0, 15, 0.5, -27)
+toggleButton.BackgroundColor3 = COLORS.BgBlack
 toggleButton.BorderSizePixel = 0
-toggleButton.Text = ""
 toggleButton.AutoButtonColor = false
 toggleButton.Parent = screenGui
 
+-- Làm nút thành hình tròn
 local toggleCorner = Instance.new("UICorner")
 toggleCorner.CornerRadius = UDim.new(1, 0)
 toggleCorner.Parent = toggleButton
 
--- Border sáng màu Tím Neon
+-- Viền Neon Tím
 local toggleStroke = Instance.new("UIStroke")
 toggleStroke.Color = COLORS.MainNeon
-toggleStroke.Thickness = 2
+toggleStroke.Thickness = 2.5
 toggleStroke.Parent = toggleButton
 
--- Avatar Circle (Left side)
-local avatarFrame = Instance.new("Frame")
-avatarFrame.Name = "AvatarFrame"
-avatarFrame.Size = UDim2.new(0, 44, 0, 44)
-avatarFrame.Position = UDim2.new(0, 3, 0.5, -22)
-avatarFrame.BackgroundColor3 = COLORS.MainDark -- Nền tím đậm
-avatarFrame.BorderSizePixel = 0
-avatarFrame.Active = false
-avatarFrame.Parent = toggleButton
+-- Ảnh đại diện bên trong hình tròn
+local avatarImg = Instance.new("ImageLabel")
+avatarImg.Size = UDim2.new(1, 0, 1, 0) -- Chiếm toàn bộ hình tròn
+avatarImg.BackgroundTransparency = 1
+avatarImg.Image = "rbxassetid://138193155303205" -- Ảnh của The Anh
+avatarImg.Parent = toggleButton
 
 local avatarCorner = Instance.new("UICorner")
 avatarCorner.CornerRadius = UDim.new(1, 0)
-avatarCorner.Parent = avatarFrame
-
-local avatarImage = Instance.new("ImageLabel")
-avatarImage.Name = "AvatarImage"
-avatarImage.Size = UDim2.new(1, -4, 1, -4)
-avatarImage.Position = UDim2.new(0, 2, 0, 2)
-avatarImage.BackgroundTransparency = 1
-avatarImage.Image = "rbxassetid://138193155303205"
-avatarImage.Active = false
-avatarImage.Parent = avatarFrame
-
-local avatarMask = Instance.new("UICorner")
-avatarMask.CornerRadius = UDim.new(1, 0)
-avatarMask.Parent = avatarImage
-
--- Label Text - FIXED to GothamBold & Light Color
-local titleLabel = Instance.new("TextLabel")
-titleLabel.Name = "TitleLabel"
-titleLabel.Active = false
-titleLabel.Size = UDim2.new(1, -55, 1, 0)
-titleLabel.Position = UDim2.new(0, 50, 0, 0)
-titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "TAZz Hub"
-titleLabel.TextColor3 = COLORS.TextLight -- Màu chữ nhạt
-titleLabel.TextSize = 18
-titleLabel.Font = Enum.Font.GothamBold -- FIXED FONT
-titleLabel.TextScaled = true
-titleLabel.Parent = toggleButton
+avatarCorner.Parent = avatarImg
 
 -- ============================================
--- MAIN DASHBOARD (Large UI) - FIXED Colors
+-- GIAO DIỆN CHÍNH (MAIN DASHBOARD)
 -- ============================================
 local mainDashboard = Instance.new("Frame")
-mainDashboard.Name = "MainDashboard"
-mainDashboard.Size = UDim2.new(0, 600, 0, 400)
-mainDashboard.Position = UDim2.new(0.5, -300, 0.5, -200)
-mainDashboard.BackgroundColor3 = COLORS.BgCharcoal -- Nền chính đậm
-mainDashboard.BorderSizePixel = 0
-mainDashboard.Visible = false
+mainDashboard.Name = "MainHub"
+mainDashboard.Size = UDim2.new(0, 580, 0, 380)
+mainDashboard.Position = UDim2.new(0.5, -290, 0.5, -190)
+mainDashboard.BackgroundColor3 = COLORS.BgBlack
+mainDashboard.Visible = false -- Ẩn lúc đầu
 mainDashboard.Parent = screenGui
 
 local mainCorner = Instance.new("UICorner")
 mainCorner.CornerRadius = UDim.new(0, 12)
 mainCorner.Parent = mainDashboard
 
--- Neon Purple Border with Glow
 local mainStroke = Instance.new("UIStroke")
 mainStroke.Color = COLORS.MainNeon
 mainStroke.Thickness = 2
 mainStroke.Parent = mainDashboard
 
--- Glow Effect (Outer Frame)
-local glowFrame = Instance.new("Frame")
-glowFrame.Name = "GlowFrame"
-glowFrame.Size = UDim2.new(1, 20, 1, 20)
-glowFrame.Position = UDim2.new(0, -10, 0, -10)
-glowFrame.BackgroundColor3 = COLORS.MainNeon
-glowFrame.BackgroundTransparency = 0.8 -- Làm mờ Glow hơn
-glowFrame.BorderSizePixel = 0
-glowFrame.Visible = false
-glowFrame.ZIndex = -1
-glowFrame.Parent = mainDashboard
-
-local glowCorner = Instance.new("UICorner")
-glowCorner.CornerRadius = UDim.new(0, 15)
-glowCorner.Parent = glowFrame
-
--- ============================================
--- HEADER SECTION
--- ============================================
+-- Header với nút X fix lỗi
 local header = Instance.new("Frame")
-header.Name = "Header"
-header.Size = UDim2.new(1, 0, 0, 45)
-header.Position = UDim2.new(0, 0, 0, 0)
-header.BackgroundColor3 = COLORS.BgDarker -- Nền Header đậm hơn
-header.BorderSizePixel = 0
+header.Size = UDim2.new(1, 0, 0, 40)
+header.BackgroundTransparency = 1
 header.Parent = mainDashboard
 
-local headerCorner = Instance.new("UICorner")
-headerCorner.CornerRadius = UDim.new(0, 12)
-headerCorner.Parent = header
-
--- Title in Header - FIXED to GothamBold & Light Color
 local headerTitle = Instance.new("TextLabel")
-headerTitle.Name = "HeaderTitle"
-headerTitle.Size = UDim2.new(0, 150, 1, 0)
+headerTitle.Text = "TAZz Hub | THE ANH"
+headerTitle.Font = Enum.Font.GothamBold
+headerTitle.TextColor3 = COLORS.MainNeon
+headerTitle.TextSize = 18
 headerTitle.Position = UDim2.new(0, 15, 0, 0)
+headerTitle.Size = UDim2.new(0, 200, 1, 0)
 headerTitle.BackgroundTransparency = 1
-headerTitle.Text = "TAZz Hub"
-headerTitle.TextColor3 = COLORS.MainNeon -- Màu Neon chính cho tiêu đề
-headerTitle.TextSize = 22
-headerTitle.Font = Enum.Font.GothamBold -- FIXED FONT
 headerTitle.TextXAlignment = Enum.TextXAlignment.Left
 headerTitle.Parent = header
 
--- Version Bar (Center)
-local versionBar = Instance.new("Frame")
-versionBar.Name = "VersionBar"
-versionBar.Size = UDim2.new(0, 200, 0, 28)
-versionBar.Position = UDim2.new(0.5, -100, 0.5, -14)
-versionBar.BackgroundColor3 = COLORS.Black
-versionBar.BorderSizePixel = 0
-versionBar.Parent = header
-
-local versionCorner = Instance.new("UICorner")
-versionCorner.CornerRadius = UDim.new(0, 6)
-versionCorner.Parent = versionBar
-
--- Version Text - FIXED to GothamBold
-local versionText = Instance.new("TextLabel")
-versionText.Name = "VersionText"
-versionText.Size = UDim2.new(1, 0, 1, 0)
-versionText.BackgroundTransparency = 1
-versionText.Text = "TAZz Hub | tổng hợp v1"
-versionText.TextColor3 = COLORS.White
-versionText.TextSize = 12
-versionText.Font = Enum.Font.GothamBold -- FIXED FONT
-versionText.Parent = versionBar
-
--- Window Controls (Right side)
-local controlsFrame = Instance.new("Frame")
-controlsFrame.Name = "Controls"
-controlsFrame.Size = UDim2.new(0, 100, 1, 0)
-controlsFrame.Position = UDim2.new(1, -105, 0, 0)
-controlsFrame.BackgroundTransparency = 1
-controlsFrame.Parent = header
-
-local controlButtons = {"Maximize", "Minimize", "Close"}
-local controlIcons = {"□", "—", "X"}
-
-for i, name in ipairs(controlButtons) do
-	local btn = Instance.new("TextButton")
-	btn.Name = name
-	btn.Size = UDim2.new(0, 30, 0, 30)
-	btn.Position = UDim2.new(0, (i - 1) * 33, 0.5, -15)
-	btn.BackgroundColor3 = COLORS.BgDarker
-	btn.BackgroundTransparency = 0.5
-	btn.Text = controlIcons[i]
-	btn.TextColor3 = COLORS.MainNeon -- Màu Neon cho icon nút
-	btn.TextSize = 14
-	btn.Font = Enum.Font.GothamBold
-	btn.BorderSizePixel = 0
-	btn.Parent = controlsFrame
-
-	local btnCorner = Instance.new("UICorner")
-	btnCorner.CornerRadius = UDim.new(0, 6)
-	btnCorner.Parent = btn
-end
+local closeBtn = Instance.new("TextButton")
+closeBtn.Name = "CloseButton"
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextColor3 = Color3.fromRGB(255, 50, 50)
+closeBtn.Size = UDim2.new(0, 35, 0, 35)
+closeBtn.Position = UDim2.new(1, -40, 0, 2)
+closeBtn.BackgroundTransparency = 1
+closeBtn.Parent = header
 
 -- ============================================
--- SIDEBAR (Navigation) - Scrollable
+-- LOGIC HOẠT ĐỘNG (FIX X & TOGGLE)
 -- ============================================
-local sidebarContainer = Instance.new("Frame")
-sidebarContainer.Name = "SidebarContainer"
-sidebarContainer.Size = UDim2.new(0, 140, 1, -55)
-sidebarContainer.Position = UDim2.new(0, 10, 0, 50)
-sidebarContainer.BackgroundColor3 = COLORS.BgCharcoal -- Nền đậm
-sidebarContainer.BackgroundTransparency = 0.5
-sidebarContainer.BorderSizePixel = 0
-sidebarContainer.Parent = mainDashboard
 
-local containerCorner = Instance.new("UICorner")
-containerCorner.CornerRadius = UDim.new(0, 8)
-containerCorner.Parent = sidebarContainer
-
-local sidebar = Instance.new("ScrollingFrame")
-sidebar.Name = "Sidebar"
-sidebar.Size = UDim2.new(1, 0, 1, 0)
-sidebar.Position = UDim2.new(0, 0, 0, 0)
-sidebar.BackgroundColor3 = COLORS.BgCharcoal
-sidebar.BackgroundTransparency = 1
-sidebar.BorderSizePixel = 0
-sidebar.ScrollBarThickness = 6
-sidebar.ScrollBarImageColor3 = COLORS.MainNeon -- Màu Scrollbar Neon
-sidebar.Parent = sidebarContainer
-
-local sidebarLayout = Instance.new("UIListLayout")
-sidebarLayout.Padding = UDim.new(0, 8)
-sidebarLayout.Parent = sidebar
-
-local sidebarPadding = Instance.new("UIPadding")
-sidebarPadding.PaddingTop = UDim.new(0, 10)
-sidebarPadding.PaddingLeft = UDim.new(0, 5)
-sidebarPadding.Parent = sidebar
-
--- Tự động cập nhật CanvasSize
-sidebarLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-	sidebar.CanvasSize = UDim2.new(0, 0, 0, sidebarLayout.AbsoluteContentSize.Y + 20)
+-- Bấm X chỉ ẩn menu, không xóa
+closeBtn.MouseButton1Click:Connect(function()
+    mainDashboard.Visible = false
+    -- Hiệu ứng nút tròn hiện ra rõ hơn khi đóng menu
+    TweenService:Create(toggleButton, TweenInfo.new(0.3), {ImageTransparency = 0}):Play()
 end)
 
--- Sidebar Buttons
-local sidebarButtons = {
-	{Name = "Discord", Text = "Discord"},
-	{Name = "BloxFruits", Text = "bloxfruits"},
-	{Name = "TAB1", Text = "TAB"},
-	{Name = "TAB2", Text = "TAB"},
-	{Name = "TAB3", Text = "TAB"},
-}
-
-for _, btnData in ipairs(sidebarButtons) do
-	local btn = Instance.new("TextButton")
-	btn.Name = btnData.Name
-	btn.Size = UDim2.new(1, -10, 0, 35)
-	btn.BackgroundColor3 = COLORS.BgCharcoal -- Nền đậm mặc định
-	btn.BackgroundTransparency = 0.3
-	btn.Text = btnData.Text
-	btn.TextColor3 = COLORS.TextLight -- Màu chữ nhạt mặc định
-	btn.TextSize = 14
-	btn.Font = Enum.Font.GothamBold -- FIXED FONT
-	btn.BorderSizePixel = 0
-	btn.Parent = sidebar
-
-	local btnStroke = Instance.new("UIStroke")
-	btnStroke.Color = COLORS.MainDark -- Border tím đậm mặc định
-	btnStroke.Thickness = 1
-	btnStroke.Parent = btn
-
-	local btnCorner = Instance.new("UICorner")
-	btnCorner.CornerRadius = UDim.new(0, 8)
-	btnCorner.Parent = btn
-end
-
--- ============================================
--- MAIN PANEL (Content Area)
--- ============================================
-local mainPanel = Instance.new("Frame")
-mainPanel.Name = "MainPanel"
-mainPanel.Size = UDim2.new(1, -165, 1, -65)
-mainPanel.Position = UDim2.new(0, 155, 0, 55)
-mainPanel.BackgroundColor3 = COLORS.BgCharcoal
-mainPanel.BackgroundTransparency = 0.3
-mainPanel.BorderSizePixel = 0
-mainPanel.Parent = mainDashboard
-
-local panelStroke = Instance.new("UIStroke")
-panelStroke.Color = COLORS.MainDark -- Border tím đậm phụ
-panelStroke.Thickness = 1
-panelStroke.Parent = mainPanel
-
-local panelCorner = Instance.new("UICorner")
-panelCorner.CornerRadius = UDim.new(0, 8)
-panelCorner.Parent = mainPanel
-
--- ============================================
--- DISCORD TAB CONTENT
--- ============================================
-local discordContent = Instance.new("Frame")
-discordContent.Name = "DiscordContent"
-discordContent.Size = UDim2.new(1, 0, 1, 0)
-discordContent.BackgroundTransparency = 1
-discordContent.Visible = false
-discordContent.Parent = mainPanel
-
--- Banner Frame
-local bannerFrame = Instance.new("Frame")
-bannerFrame.Name = "BannerFrame"
-bannerFrame.Size = UDim2.new(1, -20, 0, 150)
-bannerFrame.Position = UDim2.new(0, 10, 0, 10)
-bannerFrame.BackgroundColor3 = COLORS.BgCharcoal
-bannerFrame.BorderSizePixel = 0
-bannerFrame.Parent = discordContent
-
-local bannerCorner = Instance.new("UICorner")
-bannerCorner.CornerRadius = UDim.new(0, 10)
-bannerCorner.Parent = bannerFrame
-
--- Border Neon sáng cho Banner
-local bannerStroke = Instance.new("UIStroke")
-bannerStroke.Color = COLORS.MainNeon
-bannerStroke.Thickness = 2
-bannerStroke.Parent = bannerFrame
-
--- Banner Background Image
-local bannerImage = Instance.new("ImageLabel")
-bannerImage.Name = "BannerImage"
-bannerImage.Size = UDim2.new(1, 0, 1, 0)
-bannerImage.BackgroundTransparency = 1
-bannerImage.Image = "rbxassetid://90124281920460"
-bannerImage.ScaleType = Enum.ScaleType.Crop
-bannerImage.Parent = bannerFrame
-
-local bannerImageCorner = Instance.new("UICorner")
-bannerImageCorner.CornerRadius = UDim.new(0, 10)
-bannerImageCorner.Parent = bannerImage
-
--- Avatar Circle (Left side of banner)
-local bannerAvatarFrame = Instance.new("Frame")
-bannerAvatarFrame.Name = "BannerAvatarFrame"
-bannerAvatarFrame.Size = UDim2.new(0, 80, 0, 80)
-bannerAvatarFrame.Position = UDim2.new(0, 15, 0.5, -40)
-bannerAvatarFrame.BackgroundColor3 = COLORS.MainDark
-bannerAvatarFrame.BorderSizePixel = 0
-bannerAvatarFrame.ZIndex = 10
-bannerAvatarFrame.Parent = bannerFrame
-
-local bannerAvatarCorner = Instance.new("UICorner")
-bannerAvatarCorner.CornerRadius = UDim.new(1, 0)
-bannerAvatarCorner.Parent = bannerAvatarFrame
-
-local bannerAvatarStroke = Instance.new("UIStroke")
-bannerAvatarStroke.Color = COLORS.MainNeon
-bannerAvatarStroke.Thickness = 3
-bannerAvatarStroke.Parent = bannerAvatarFrame
-
-local bannerAvatarImage = Instance.new("ImageLabel")
-bannerAvatarImage.Name = "BannerAvatarImage"
-bannerAvatarImage.Size = UDim2.new(1, -6, 1, -6)
-bannerAvatarImage.Position = UDim2.new(0, 3, 0, 3)
-bannerAvatarImage.BackgroundTransparency = 1
-bannerAvatarImage.Image = "rbxassetid://138193155303205"
-bannerAvatarImage.ZIndex = 11
-bannerAvatarImage.Parent = bannerAvatarFrame
-
-local bannerAvatarMask = Instance.new("UICorner")
-bannerAvatarMask.CornerRadius = UDim.new(1, 0)
-bannerAvatarMask.Parent = bannerAvatarImage
-
--- Banner Title Text - FIXED to GothamBold
-local bannerTitle = Instance.new("TextLabel")
-bannerTitle.Name = "BannerTitle"
-bannerTitle.Size = UDim2.new(1, -110, 0, 40)
-bannerTitle.Position = UDim2.new(0, 100, 0.5, -20)
-bannerTitle.BackgroundTransparency = 1
-bannerTitle.Text = "TAZz Hub | tổng hợp v1"
-bannerTitle.TextColor3 = COLORS.White
-bannerTitle.TextSize = 20
-bannerTitle.Font = Enum.Font.GothamBold -- FIXED FONT
-bannerTitle.TextStrokeTransparency = 0.5
-bannerTitle.ZIndex = 10
-bannerTitle.Parent = bannerFrame
-
--- Description Text - FIXED to GothamBold
-local descLabel = Instance.new("TextLabel")
-descLabel.Name = "DescLabel"
-descLabel.Size = UDim2.new(1, -20, 0, 30)
-descLabel.Position = UDim2.new(0, 10, 0, 175)
-descLabel.BackgroundTransparency = 1
-descLabel.Text = "Đây là tab discord"
-descLabel.TextColor3 = COLORS.White
-descLabel.TextSize = 16
-descLabel.Font = Enum.Font.GothamBold -- FIXED FONT
-descLabel.Parent = discordContent
-
--- Copy Discord Link Button - FIXED Colors
-local copyDiscordBtn = Instance.new("TextButton")
-copyDiscordBtn.Name = "CopyDiscordBtn"
-copyDiscordBtn.Size = UDim2.new(1, -20, 0, 50)
-copyDiscordBtn.Position = UDim2.new(0, 10, 0, 215)
-copyDiscordBtn.BackgroundColor3 = COLORS.MainDark -- Nền tím đậm
-copyDiscordBtn.BorderSizePixel = 0
-copyDiscordBtn.Text = "Copy link Discord"
-copyDiscordBtn.TextColor3 = COLORS.TextLight -- Màu chữ nhạt
-copyDiscordBtn.TextSize = 18
-copyDiscordBtn.Font = Enum.Font.GothamBold -- FIXED FONT
-copyDiscordBtn.AutoButtonColor = false
-copyDiscordBtn.Parent = discordContent
-
-local copyBtnCorner = Instance.new("UICorner")
-copyBtnCorner.CornerRadius = UDim.new(0, 10)
-copyBtnCorner.Parent = copyDiscordBtn
-
-local copyBtnStroke = Instance.new("UIStroke")
-copyBtnStroke.Color = COLORS.MainNeon -- Border tím sáng Neon
-copyBtnStroke.Thickness = 2
-copyBtnStroke.Parent = copyDiscordBtn
-
--- Copy Button Hover Effect
-copyDiscordBtn.MouseEnter:Connect(function()
-	TweenService:Create(copyDiscordBtn, TweenInfo.new(0.2), {
-		BackgroundColor3 = COLORS.MainNeon, -- Nền tím sáng Neon khi hovered
-		TextColor3 = COLORS.White
-	}):Play()
-end)
-
-copyDiscordBtn.MouseLeave:Connect(function()
-	TweenService:Create(copyDiscordBtn, TweenInfo.new(0.2), {
-		BackgroundColor3 = COLORS.MainDark, -- Trở lại tím đậm
-		TextColor3 = COLORS.TextLight
-	}):Play()
-end)
-
--- Copy to Clipboard
-copyDiscordBtn.MouseButton1Click:Connect(function()
-	local setClipboard = syn and syn.write_clipboard or setclipboard or function() end
-	if setClipboard then
-		setClipboard("https://discord.gg/YOUR_DISCORD_LINK")
-		local originalText = copyDiscordBtn.Text
-		copyDiscordBtn.Text = "✓ Đã copy!"
-		task.wait(1.5)
-		copyDiscordBtn.Text = originalText
-	end
-end)
-
--- ============================================
--- DEFAULT CONTENT (Welcome) - FIXED Text Color
--- ============================================
-local defaultContent = Instance.new("Frame")
-defaultContent.Name = "DefaultContent"
-defaultContent.Size = UDim2.new(1, 0, 1, 0)
-defaultContent.BackgroundTransparency = 1
-defaultContent.Visible = true
-defaultContent.Parent = mainPanel
-
-local contentLabel = Instance.new("TextLabel")
-contentLabel.Name = "ContentLabel"
-contentLabel.Size = UDim2.new(1, 0, 1, 0)
-contentLabel.BackgroundTransparency = 1
-contentLabel.Text = "Chào mừng đến với TAZz Hub!\nChọn một tab từ thanh bên trái để bắt đầu."
-contentLabel.TextColor3 = COLORS.TextLight -- Màu chữ nhạt cho chào mừng
-contentLabel.TextSize = 16
-contentLabel.Font = Enum.Font.GothamBold -- FIXED FONT
-contentLabel.TextWrapped = true
-contentLabel.Parent = defaultContent
-
--- ============================================
--- FUNCTIONALITY
--- ============================================
-local isMenuOpen = false
-local isMinimized = false
-
--- ============================================
--- DRAG FUNCTION - Hỗ trợ Mouse và Touch
--- ============================================
-local function makeDraggable(draggableObject, dragFrame)
-	local dragging = false
-	local dragStart, startPos
-	local dragDistance = 0
-
-	dragFrame.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			dragging = true
-			dragStart = input.Position
-			startPos = draggableObject.Position
-			dragDistance = 0
-			TweenService:Cancel(draggableObject)
-		end
-	end)
-
-	dragFrame.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			dragging = false
-		end
-	end)
-
-	UserInputService.InputChanged:Connect(function(input)
-		if dragging then
-			local delta = input.Position - dragStart
-			dragDistance = math.abs(delta.X) + math.abs(delta.Y)
-			draggableObject.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-		end
-	end)
-
-	return function()
-		return dragDistance
-	end
-end
-
--- Toggle Button Drag
-local getToggleDragDistance = makeDraggable(toggleButton, toggleButton)
-
--- Click để toggle menu (chỉ khi không kéo)
+-- Bấm hình tròn để mở/tắt
 toggleButton.MouseButton1Click:Connect(function()
-	if getToggleDragDistance() > 10 then return end
-	
-	isMenuOpen = not isMenuOpen
-	mainDashboard.Visible = isMenuOpen
-	glowFrame.Visible = isMenuOpen
-
-	if isMenuOpen then
-		isMinimized = false
-		sidebarContainer.Visible = true
-		mainPanel.Visible = true
-		glowFrame.Visible = true
-		mainDashboard.Size = UDim2.new(0, 0, 0, 0)
-		mainDashboard.Position = UDim2.new(0.5, 0, 0.5, 0)
-		TweenService:Create(mainDashboard, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-			Size = UDim2.new(0, 600, 0, 400),
-			Position = UDim2.new(0.5, -300, 0.5, -200)
-		}):Play()
-	end
+    mainDashboard.Visible = not mainDashboard.Visible
+    
+    -- Hiệu ứng nhấn nút
+    local bounce = TweenService:Create(toggleButton, TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 48, 0, 48)})
+    bounce:Play()
+    bounce.Completed:Wait()
+    TweenService:Create(toggleButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 55, 0, 55)}):Play()
 end)
 
--- Minimize Button - FIXED functionality
-local minimizeButton = controlsFrame:FindFirstChild("Minimize")
-if minimizeButton then
-	minimizeButton.MouseButton1Click:Connect(function()
-		isMinimized = not isMinimized
-		if isMinimized then
-			sidebarContainer.Visible = false
-			mainPanel.Visible = false
-			glowFrame.Visible = false
-			mainDashboard.Size = UDim2.new(0, 600, 0, 50)
-			mainDashboard.Position = UDim2.new(0.5, -300, 0.5, -25)
-		else
-			sidebarContainer.Visible = true
-			mainPanel.Visible = true
-			glowFrame.Visible = true
-			mainDashboard.Size = UDim2.new(0, 600, 0, 400)
-			mainDashboard.Position = UDim2.new(0.5, -300, 0.5, -200)
-		end
-	end)
+-- Chức năng kéo thả (Draggable) cho cả hình tròn và Menu
+local function makeDraggable(obj)
+    local dragging, dragInput, dragStart, startPos
+    obj.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = obj.Position
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            obj.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    obj.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
 end
 
--- Close Button
-local closeButton = controlsFrame:FindFirstChild("Close")
-if closeButton then
-	closeButton.MouseButton1Click:Connect(function()
-		screenGui:Destroy()
-	end)
-end
+makeDraggable(toggleButton)
+makeDraggable(mainDashboard)
 
--- Drag Main Dashboard
-makeDraggable(mainDashboard, header)
-
--- Function to switch content
-local function switchContent(tabName)
-	defaultContent.Visible = false
-	discordContent.Visible = false
-	
-	if tabName == "Discord" then
-		discordContent.Visible = true
-	elseif tabName == "BloxFruits" then
-		defaultContent.Visible = true
-		contentLabel.Text = "Tab BloxFruits\n(Đang phát triển...)"
-	else
-		defaultContent.Visible = true
-		contentLabel.Text = "Bạn đã chọn: " .. tabName
-	end
-end
-
--- Sidebar Button Click Effects & Logic
-for _, btnData in ipairs(sidebarButtons) do
-	local btn = sidebar:FindFirstChild(btnData.Name)
-	if btn then
-		btn.MouseButton1Click:Connect(function()
-			switchContent(btnData.Name)
-			
-			for _, otherBtn in ipairs(sidebar:GetChildren()) do
-				if otherBtn:IsA("TextButton") then
-					TweenService:Create(otherBtn, TweenInfo.new(0.2), {
-						BackgroundColor3 = COLORS.BgCharcoal,
-						TextColor3 = COLORS.TextLight
-					}):Play()
-					local stroke = otherBtn:FindFirstChild("UIStroke")
-					if stroke then stroke.Color = COLORS.MainDark end
-				end
-			end
-			
-			TweenService:Create(btn, TweenInfo.new(0.2), {
-				BackgroundColor3 = COLORS.MainDark, -- Highlight tím đậm khi được chọn
-				TextColor3 = COLORS.White
-			}):Play()
-			local stroke = btn:FindFirstChild("UIStroke")
-			if stroke then stroke.Color = COLORS.MainNeon end -- Border tím sáng Neon khi được chọn
-		end)
-	end
-end
-
-print("TAZz Hub UI loaded successfully!")
+print("TAZz Hub: Minimalist Circle Toggle Loaded!")

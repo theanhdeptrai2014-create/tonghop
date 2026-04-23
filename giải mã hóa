@@ -1,11 +1,19 @@
--- DÁN Ở ĐÂY (trước tất cả)
-
-local old_loadstring = loadstring
-
-loadstring = function(code)
-    print("=== DUMPED CODE ===")
-    print(code)
-    return old_loadstring(code)
+for i,v in next, getgc(true) do
+    if type(v) == "function" then
+        local info = debug.getinfo(v)
+        if info and info.source then
+            hookfunction(v, function(...)
+                local args = {...}
+                for _,x in ipairs(args) do
+                    if type(x) == "string" and #x > 200 then
+                        print("=== DUMP STRING ===")
+                        print(x)
+                    end
+                end
+                return v(...)
+            end)
+        end
+    end
 end
 
 -- SAU ĐÓ MỚI TỚI CODE LURAPH

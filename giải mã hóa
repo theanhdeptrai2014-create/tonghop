@@ -1,15 +1,18 @@
+task.wait(2) -- tránh anti
+
 local old = loadstring or load
 
 if old then
-    local new
-    new = function(code)
-        if type(code) == "string" and #code > 200 then
-            print("=== CODE ===")
-            print(code)
+    local function new(code)
+        if type(code) == "string" then
+            if #code > 300 then -- chỉ bắt string lớn
+                print("=== DUMP ===")
+                print(string.sub(code,1,500)) -- in 1 phần thôi cho đỡ lag
+            end
         end
         return old(code)
     end
-    
+
     if loadstring then
         loadstring = new
     else

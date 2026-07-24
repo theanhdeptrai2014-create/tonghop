@@ -1,0 +1,706 @@
+--[[
+    TAZZ V1 - FULL 42 TÍNH NĂNG
+    Tab 1: Combat | Tab 2: Tối Ưu
+    F4: Menu | [-] Ẩn | [X] Xóa
+--]]
+
+-- ===== XÓA CŨ =====
+for _, gui in pairs(game:GetService("CoreGui"):GetChildren()) do if gui.Name:find("TAZZ") then gui:Destroy() end end
+for _, gui in pairs(game.Players.LocalPlayer.PlayerGui:GetChildren()) do if gui.Name:find("TAZZ") then gui:Destroy() end end
+
+-- ===== SERVICES =====
+local UIS = game:GetService("UserInputService")
+local RS = game:GetService("RunService")
+local Players = game:GetService("Players")
+local WS = game:GetService("Workspace")
+local Lighting = game:GetService("Lighting")
+local SG = game:GetService("StarterGui")
+local VIM = game:GetService("VirtualInputManager")
+local TP = game:GetService("TeleportService")
+local Stats = game:GetService("Stats")
+
+local plr = Players.LocalPlayer
+local mouse = plr:GetMouse()
+local cam = WS.CurrentCamera
+
+-- ===== BIẾN CHÍNH =====
+local fe = {
+    fly=false, aim=false, combat=false, esp=false, hb=false, dmg=false
+}
+local opt = {
+    antiLag=false, antiAlias=false, noShadow=false, noTexture=false, noEffect=false,
+    noGrass=false, noFog=false, noAtmos=false, lowRender=false, noWater=false,
+    noDecal=false, noTree=false, noLeaf=false, noSky=false, noSeat=false,
+    noBloom=false, noSunRay=false, noColorCor=false, noPost=false, lowBright=false,
+    noAllShadow=false, unlockFPS=false, fastLoad=false,
+    noMusic=false, noSound=false,
+    delItem=false, delBlock=false,
+    speedHack=false, jumpHack=false,
+    autoPick=false, cleanTerrain=false, cleanWS=false
+}
+local flySpd = 50
+local hbSize = 25
+local target = nil
+local busy = false
+local runSpd = 50
+local jumpPwr = 100
+local flyBV, flyBG = nil, nil
+local conns = {}
+local espBGs, espHLs = {}, {}
+local hbList = {}
+local menuBtns = {}
+local tab = 1
+
+local RED = Color3.fromRGB(255,60,60)
+local GREEN = Color3.fromRGB(60,255,60)
+
+-- ===== WATERMARK =====
+local wm = Instance.new("ScreenGui", game:GetService("CoreGui"))
+wm.Name = "TAZZ"
+
+local wb = Instance.new("Frame", wm)
+wb.Size = UDim2.new(0,180,0,130) wb.Position = UDim2.new(0,5,0,5)
+wb.BackgroundColor3 = Color3.new(0,0,0) wb.BackgroundTransparency = 0.5 wb.BorderSizePixel = 0
+Instance.new("UICorner", wb).CornerRadius = UDim.new(0,7)
+
+local wt = Instance.new("TextLabel", wb)
+wt.Text = "TAZZ" wt.Size = UDim2.new(1,0,0,22) wt.BackgroundTransparency = 1
+wt.Font = Enum.Font.GothamBlack wt.TextSize = 17
+
+coroutine.wrap(function() local h=0 while wt and wt.Parent do h=(h+1)%360 wt.TextColor3=Color3.fromHSV(h/360,1,1) task.wait(0.05) end end)()
+
+local wmFPS = Instance.new("TextLabel", wb)
+wmFPS.Size = UDim2.new(1,-6,0,13) wmFPS.Position = UDim2.new(0,3,0,23) wmFPS.BackgroundTransparency = 1
+wmFPS.Text = "FPS: 0 | Ping: 0" wmFPS.TextColor3 = Color3.new(0.8,0.8,0.8) wmFPS.Font = Enum.Font.GothamBold wmFPS.TextSize = 8 wmFPS.TextXAlignment = Enum.TextXAlignment.Left
+
+coroutine.wrap(function()
+    local lt=tick() local f=0 local fps=0
+    while wmFPS and wmFPS.Parent do
+        f+=1
+        if tick()-lt>=1 then fps=f f=0 lt=tick() end
+        local ping=math.floor((Stats.PerformanceStats.Ping:GetValue()or 0)*1000)
+        wmFPS.Text="FPS: "..fps.." | Ping: "..ping.."ms"
+        wmFPS.TextColor3=ping<100 and GREEN or (ping<200 and Color3.fromRGB(255,200,0)or RED)
+        task.wait(0.2)
+    end
+end)()
+
+-- ===== HÀM ĐỒNG BỘ =====
+local function sync(key, on)
+    if fe[key]~=nil then fe[key]=on end
+    if opt[key]~=nil then opt[key]=on end
+    local mb=menuBtns[key]
+    if mb then mb.icon.Text=on and"🟢"or"🔴" mb.lbl.TextColor3=on and GREEN or Color3.fromRGB(175,175,195) mb.stk.Color=on and GREEN or Color3.fromRGB(55,55,75) end
+end
+
+-- ===== CLICK =====
+local function click()
+    VIM:SendMouseButtonEvent(0,0,0,true,nil,0) task.wait(0.03) VIM:SendMouseButtonEvent(0,0,0,false,nil,0)
+end
+
+-- ===== FIRE REMOTE =====
+local function fire()
+    pcall(function() for _,v in pairs(game:GetService("ReplicatedStorage"):GetDescendants()) do if v:IsA("RemoteEvent") then v:FireServer() end end end)
+end
+
+-- ===== FLY =====
+local function fly(on)
+    if on then
+        local c=plr.Character if not c then sync("fly",false) return end
+        local r=c:FindFirstChild("HumanoidRootPart") if not r then sync("fly",false) return end
+        if flyBV then flyBV:Destroy() end if flyBG then flyBG:Destroy() end if conns.fly then conns.fly:Disconnect() end
+        
+        flyBV=Instance.new("BodyVelocity",r) flyBV.MaxForce=Vector3.new(1e9,1e9,1e9) flyBV.Velocity=Vector3.zero
+        flyBG=Instance.new("BodyGyro",r) flyBG.MaxTorque=Vector3.new(1e9,1e9,1e9) flyBG.D=500 flyBG.P=3000
+        
+        conns.fly=RS.RenderStepped:Connect(function()
+            if not fe.fly or not c.Parent or not r.Parent then conns.fly:Disconnect() conns.fly=nil if flyBV then flyBV:Destroy() flyBV=nil end if flyBG then flyBG:Destroy() flyBG=nil end sync("fly",false) return end
+            local d=Vector3.zero
+            if UIS:IsKeyDown(Enum.KeyCode.W) then d+=r.CFrame.LookVector end
+            if UIS:IsKeyDown(Enum.KeyCode.S) then d-=r.CFrame.LookVector end
+            if UIS:IsKeyDown(Enum.KeyCode.A) then d-=r.CFrame.RightVector end
+            if UIS:IsKeyDown(Enum.KeyCode.D) then d+=r.CFrame.RightVector end
+            if UIS:IsKeyDown(Enum.KeyCode.Space) then d+=Vector3.new(0,1,0) end
+            if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then d+=Vector3.new(0,-1,0) end
+            if d.Magnitude>0 then d=d.Unit end
+            local s=UIS:IsKeyDown(Enum.KeyCode.LeftShift) and flySpd*2.5 or flySpd
+            if flyBV and flyBV.Parent then flyBV.Velocity=d*s end
+            if flyBG and flyBG.Parent then flyBG.CFrame=CFrame.new(r.Position,r.Position+cam.CFrame.LookVector*10) end
+        end)
+        sync("fly",true)
+    else
+        if conns.fly then conns.fly:Disconnect() conns.fly=nil end
+        if flyBV then flyBV:Destroy() flyBV=nil end if flyBG then flyBG:Destroy() flyBG=nil end
+        sync("fly",false)
+    end
+end
+
+-- ===== AIMBOT =====
+local function aim(on)
+    if on then
+        if conns.aim then conns.aim:Disconnect() end
+        conns.aim=RS.RenderStepped:Connect(function()
+            if not fe.aim then conns.aim:Disconnect() conns.aim=nil sync("aim",false) return end
+            local c=plr.Character if not c then return end
+            local r=c:FindFirstChild("HumanoidRootPart") if not r then return end
+            
+            if target and target.Character then
+                local h=target.Character:FindFirstChild("Humanoid")
+                local tr=target.Character:FindFirstChild("HumanoidRootPart")
+                local th=target.Character:FindFirstChild("Head")
+                if h and h.Health>0 and th and tr then
+                    cam.CFrame=CFrame.new(cam.CFrame.Position,th.Position)
+                    r.CFrame=CFrame.new(r.Position,Vector3.new(tr.Position.X,r.Position.Y,tr.Position.Z))
+                    return
+                end
+            end
+            
+            target=nil local md=300
+            for _,p in pairs(Players:GetPlayers()) do
+                if p~=plr and p.Character then
+                    local hd=p.Character:FindFirstChild("Head")
+                    local hm=p.Character:FindFirstChild("Humanoid")
+                    if hd and hm and hm.Health>0 then
+                        local d=(r.Position-hd.Position).Magnitude
+                        if d<md then md=d target=p end
+                    end
+                end
+            end
+        end)
+        sync("aim",true)
+    else
+        if conns.aim then conns.aim:Disconnect() conns.aim=nil end
+        target=nil sync("aim",false)
+    end
+end
+
+-- ===== AUTO COMBAT =====
+local function doCombat()
+    if busy then return end
+    if not fe.combat then return end
+    if not target or not target.Character then return end
+    
+    local c=plr.Character if not c then return end
+    local r=c:FindFirstChild("HumanoidRootPart") if not r then return end
+    local tc=target.Character
+    local tr=tc:FindFirstChild("HumanoidRootPart")
+    local th=tc:FindFirstChild("Humanoid")
+    if not tr or not th or th.Health<=0 then return end
+    if (r.Position-tr.Position).Magnitude>60 then return end
+    
+    busy=true
+    local sv=r.CFrame
+    r.CFrame=tr.CFrame*CFrame.new(0,0,3)
+    task.wait(0.04)
+    r.CFrame=CFrame.new(r.Position,tr.Position)
+    click() fire()
+    task.wait(0.15)
+    r.CFrame=sv
+    task.wait(0.2)
+    busy=false
+end
+
+local function combat(on)
+    if on then
+        if conns.combat then conns.combat:Disconnect() end
+        conns.combat=mouse.Button1Down:Connect(doCombat)
+        sync("combat",true)
+    else
+        if conns.combat then conns.combat:Disconnect() conns.combat=nil end
+        busy=false sync("combat",false)
+    end
+end
+
+-- ===== ESP =====
+local function espCreate(p)
+    if p==plr then return end
+    local c=p.Character if not c then return end
+    local hd=c:FindFirstChild("Head") if not hd then return end
+    
+    local bg=Instance.new("BillboardGui",hd) bg.Size=UDim2.new(0,150,0,12) bg.AlwaysOnTop=true bg.StudsOffset=Vector3.new(0,2,0) bg.MaxDistance=400
+    local tx=Instance.new("TextLabel",bg) tx.Size=UDim2.new(1,0,1,0) tx.BackgroundTransparency=1 tx.Text=p.Name tx.TextColor3=Color3.new(1,1,1) tx.Font=Enum.Font.GothamBold tx.TextSize=8
+    local hl=Instance.new("Highlight",c) hl.FillTransparency=0.9 hl.OutlineColor=Color3.new(1,0.2,0.2)
+    espBGs[p]=bg espHLs[p]=hl
+end
+
+local function espRemove(p)
+    if espBGs[p] then espBGs[p]:Destroy() espBGs[p]=nil end
+    if espHLs[p] then espHLs[p]:Destroy() espHLs[p]=nil end
+end
+
+local function esp(on)
+    if on then
+        for _,p in pairs(Players:GetPlayers()) do if p~=plr and p.Character then espCreate(p) end end
+        if conns.espUp then conns.espUp:Disconnect() end
+        conns.espUp=RS.RenderStepped:Connect(function()
+            if not fe.esp then return end
+            local c=plr.Character if not c then return end
+            for p,bg in pairs(espBGs) do
+                local pc=p.Character
+                if pc and bg then
+                    local h=pc:FindFirstChild("Humanoid")
+                    if h then
+                        local tx=bg:FindFirstChildOfClass("TextLabel")
+                        if tx then tx.Text=p.Name.." "..math.floor((h.Health/h.MaxHealth)*100).."%" end
+                    end
+                end
+            end
+        end)
+        sync("esp",true)
+    else
+        for p in pairs(espBGs) do if type(p)=="userdata" then espRemove(p) end end
+        if conns.espUp then conns.espUp:Disconnect() conns.espUp=nil end
+        sync("esp",false)
+    end
+end
+
+-- ===== BIG HITBOX =====
+local function hbCreate(p)
+    if p==plr then return end
+    local c=p.Character if not c then return end
+    local r=c:FindFirstChild("HumanoidRootPart") if not r then return end
+    for _,ch in pairs(c:GetChildren()) do if ch.Name=="THB" then ch:Destroy() end end
+    
+    local b=Instance.new("Part",c) b.Name="THB" b.Size=Vector3.new(hbSize,hbSize,hbSize) b.Transparency=1 b.CanCollide=true b.Anchored=false b.Massless=true
+    Instance.new("WeldConstraint",b).Part0=b Instance.new("WeldConstraint",b).Part1=r
+    table.insert(hbList,{p=b,pl=p})
+end
+
+local function hb(on)
+    if on then
+        for _,d in pairs(hbList) do if d.p then d.p:Destroy() end end hbList={}
+        for _,p in pairs(Players:GetPlayers()) do if p~=plr and p.Character then hbCreate(p) end end
+        sync("hb",true)
+    else
+        for _,d in pairs(hbList) do if d.p then d.p:Destroy() end end hbList={}
+        sync("hb",false)
+    end
+end
+
+-- ===== TĂNG DAMAGE =====
+local function dmg(on)
+    if on then
+        if conns.dmg then conns.dmg:Disconnect() end
+        conns.dmg=RS.Heartbeat:Connect(function()
+            if not fe.dmg then conns.dmg:Disconnect() conns.dmg=nil sync("dmg",false) return end
+            local c=plr.Character if not c then return end
+            local r=c:FindFirstChild("HumanoidRootPart") if not r then return end
+            for _,p in pairs(Players:GetPlayers()) do
+                if p~=plr and p.Character then
+                    local tr=p.Character:FindFirstChild("HumanoidRootPart")
+                    local th=p.Character:FindFirstChild("Humanoid")
+                    if tr and th and th.Health>0 and (r.Position-tr.Position).Magnitude<12 then
+                        th.Health=th.Health-10
+                    end
+                end
+            end
+            task.wait(0.3)
+        end)
+        sync("dmg",true)
+    else
+        if conns.dmg then conns.dmg:Disconnect() conns.dmg=nil end
+        sync("dmg",false)
+    end
+end
+
+-- ===== SPEED HACK =====
+local function speedHack(on)
+    if on then
+        if conns.speed then conns.speed:Disconnect() end
+        conns.speed=RS.Heartbeat:Connect(function()
+            if not opt.speedHack then conns.speed:Disconnect() conns.speed=nil return end
+            local c=plr.Character if c then local h=c:FindFirstChild("Humanoid") if h then h.WalkSpeed=runSpd end end
+        end)
+        sync("speedHack",true)
+    else
+        if conns.speed then conns.speed:Disconnect() conns.speed=nil end
+        local c=plr.Character if c then local h=c:FindFirstChild("Humanoid") if h then h.WalkSpeed=16 end end
+        sync("speedHack",false)
+    end
+end
+
+-- ===== JUMP HACK =====
+local function jumpHack(on)
+    if on then
+        if conns.jump then conns.jump:Disconnect() end
+        conns.jump=RS.Heartbeat:Connect(function()
+            if not opt.jumpHack then conns.jump:Disconnect() conns.jump=nil return end
+            local c=plr.Character if c then local h=c:FindFirstChild("Humanoid") if h then h.JumpPower=jumpPwr end end
+        end)
+        sync("jumpHack",true)
+    else
+        if conns.jump then conns.jump:Disconnect() conns.jump=nil end
+        local c=plr.Character if c then local h=c:FindFirstChild("Humanoid") if h then h.JumpPower=50 end end
+        sync("jumpHack",false)
+    end
+end
+
+-- ===== TỐI ƯU: BẬT TẤT CẢ MAX =====
+local function allMax()
+    for k in pairs(opt) do opt[k]=true sync(k,true) end
+    -- Áp dụng tất cả
+    applyOpt()
+    SG:SetCore("SendNotification",{Title="TAZZ",Text="Da bat tat ca toi uu MAX!",Duration=3})
+end
+
+local function allOff()
+    for k in pairs(opt) do opt[k]=false sync(k,false) end
+    -- Khôi phục
+    restoreOpt()
+    SG:SetCore("SendNotification",{Title="TAZZ",Text="Da tat tat ca toi uu!",Duration=3})
+end
+
+-- ===== ÁP DỤNG TỐI ƯU =====
+local function applyOpt()
+    -- Siêu Anti Lag
+    if opt.antiLag then
+        Lighting.GlobalShadows=false Lighting.FogEnd=9e9 Lighting.FogStart=9e9
+        Lighting.Brightness=0 Lighting.Outlines=false
+        pcall(function() settings().Rendering.QualityLevel=1 end)
+        local t=WS.Terrain t.WaterWaveSize=0 t.WaterWaveSpeed=0
+        local n=0
+        for _,o in pairs(WS:GetDescendants()) do
+            n=n+1 if n>2000 then break end
+            if o:IsA("ParticleEmitter")or o:IsA("Smoke")or o:IsA("Fire")or o:IsA("Sparkles")or o:IsA("Beam")or o:IsA("Trail") then o.Enabled=false end
+            if o:IsA("BasePart")and not o:IsDescendantOf(plr.Character) then o.Material=Enum.Material.Plastic o.Reflectance=0 end
+        end
+    end
+    
+    -- Xóa Răng Cưa
+    if opt.antiAlias then
+        pcall(function() settings().Rendering.AntiAliasingQuality=Enum.AntiAliasingQuality.Off end)
+    end
+    
+    -- Tắt Global Shadows
+    if opt.noShadow then Lighting.GlobalShadows=false end
+    
+    -- Xóa Texture
+    if opt.noTexture then
+        for _,o in pairs(WS:GetDescendants()) do if o:IsA("Texture")or o:IsA("Decal") then o:Destroy() end end
+    end
+    
+    -- Tắt Hiệu Ứng
+    if opt.noEffect then
+        for _,v in pairs(Lighting:GetChildren()) do
+            if v:IsA("BloomEffect")or v:IsA("SunRaysEffect")or v:IsA("ColorCorrectionEffect")or v:IsA("BlurEffect")or v:IsA("DepthOfFieldEffect") then v.Enabled=false end
+        end
+    end
+    
+    -- Xóa Cỏ
+    if opt.noGrass then
+        for _,o in pairs(WS:GetDescendants()) do if o:IsA("BasePart") and o.Material==Enum.Material.Grass then o.Material=Enum.Material.Plastic end end
+    end
+    
+    -- Xóa Sương Mù
+    if opt.noFog then Lighting.FogEnd=9e9 Lighting.FogStart=9e9 end
+    
+    -- Xóa Atmosphere
+    if opt.noAtmos then for _,v in pairs(Lighting:GetChildren()) do if v:IsA("Atmosphere") then v.Enabled=false end end end
+    
+    -- Giảm Render Distance
+    if opt.lowRender then pcall(function() settings().Rendering.RenderDistance=1 end) end
+    
+    -- Xóa Nước
+    if opt.noWater then
+        local t=WS.Terrain t.WaterWaveSize=0 t.WaterWaveSpeed=0 t.WaterReflectance=0 t.WaterTransparency=1
+    end
+    
+    -- Xóa Decals
+    if opt.noDecal then for _,o in pairs(WS:GetDescendants()) do if o:IsA("Decal") then o:Destroy() end end end
+    
+    -- Xóa Cây Cối
+    if opt.noTree then
+        for _,o in pairs(WS:GetDescendants()) do
+            if o:IsA("BasePart") and o.Name:lower():find("tree") or o.Name:lower():find("trunk") or o.Name:lower():find("wood") then o.Transparency=1 end
+        end
+    end
+    
+    -- Xóa Lá Cây
+    if opt.noLeaf then
+        for _,o in pairs(WS:GetDescendants()) do
+            if o:IsA("BasePart") and (o.Name:lower():find("leaf") or o.Name:lower():find("leaves") or o.Material==Enum.Material.LeafyGrass) then o.Transparency=1 end
+        end
+    end
+    
+    -- Xóa Bầu Trời
+    if opt.noSky then for _,v in pairs(Lighting:GetChildren()) do if v:IsA("Sky") then v.Enabled=false end end end
+    
+    -- Xóa Ghế
+    if opt.noSeat then for _,o in pairs(WS:GetDescendants()) do if o:IsA("Seat") then o:Destroy() end end end
+    
+    -- Tắt Bloom
+    if opt.noBloom then for _,v in pairs(Lighting:GetChildren()) do if v:IsA("BloomEffect") then v.Enabled=false end end end
+    
+    -- Tắt SunRays
+    if opt.noSunRay then for _,v in pairs(Lighting:GetChildren()) do if v:IsA("SunRaysEffect") then v.Enabled=false end end end
+    
+    -- Tắt ColorCorrection
+    if opt.noColorCor then for _,v in pairs(Lighting:GetChildren()) do if v:IsA("ColorCorrectionEffect") then v.Enabled=false end end end
+    
+    -- Tắt Post Processing
+    if opt.noPost then for _,v in pairs(Lighting:GetChildren()) do if v:IsA("PostEffect") then v.Enabled=false end end end
+    
+    -- Giảm Độ Sáng
+    if opt.lowBright then Lighting.Brightness=0 end
+    
+    -- Tắt Tất Cả Bóng
+    if opt.noAllShadow then Lighting.GlobalShadows=false Lighting.ShadowSoftness=0 end
+    
+    -- Mở Khóa FPS
+    if opt.unlockFPS then pcall(function() settings().Rendering.FrameRate=999 end) end
+    
+    -- Tắt Nhạc Nền
+    if opt.noMusic then
+        for _,o in pairs(WS:GetDescendants()) do if o:IsA("Sound") and (o.Name:lower():find("music")or o.Name:lower():find("bgm")) then o:Destroy() end end
+    end
+    
+    -- Tắt Tất Cả Âm Thanh
+    if opt.noSound then for _,o in pairs(WS:GetDescendants()) do if o:IsA("Sound") then o.Volume=0 end end end
+    
+    -- Xóa Vật Phẩm
+    if opt.delItem then
+        for _,o in pairs(WS:GetDescendants()) do if o:IsA("BasePart") and (o.Name:lower():find("item")or o.Name:lower():find("prop")) then o:Destroy() end end
+    end
+    
+    -- Xóa Khối
+    if opt.delBlock then
+        for _,o in pairs(WS:GetDescendants()) do if o:IsA("BasePart") and o.Size.Magnitude>50 and o.Anchored then o.Transparency=1 end end
+    end
+    
+    -- Auto Pick
+    if opt.autoPick then
+        if conns.pick then conns.pick:Disconnect() end
+        conns.pick=RS.Heartbeat:Connect(function()
+            if not opt.autoPick then conns.pick:Disconnect() conns.pick=nil return end
+            local c=plr.Character if not c then return end
+            local r=c:FindFirstChild("HumanoidRootPart") if not r then return end
+            for _,o in pairs(WS:GetDescendants()) do
+                if o:IsA("BasePart") and o:FindFirstChildOfClass("ProximityPrompt") then
+                    if (r.Position-o.Position).Magnitude<10 then
+                        fireproximityprompt(o:FindFirstChildOfClass("ProximityPrompt"))
+                    end
+                end
+            end
+            task.wait(0.5)
+        end)
+    end
+    
+    -- Dọn Terrain
+    if opt.cleanTerrain then WS.Terrain:Clear() end
+    
+    -- Dọn Workspace
+    if opt.cleanWS then
+        for _,o in pairs(WS:GetChildren()) do if o:IsA("BasePart") and o.Anchored and o.Size.Magnitude>100 then o:Destroy() end end
+    end
+end
+
+local function restoreOpt()
+    Lighting.GlobalShadows=true Lighting.FogEnd=100000 Lighting.Brightness=1
+    pcall(function() settings().Rendering.QualityLevel=10 end)
+end
+
+-- ===== SERVER =====
+local function sv() pcall(function() TP:Teleport(game.PlaceId,plr) end) end
+
+-- ===== XÓA =====
+local function destroy()
+    for k in pairs(fe) do fe[k]=false end
+    for k in pairs(opt) do opt[k]=false end
+    fly(false) aim(false) combat(false) esp(false) hb(false) dmg(false) speedHack(false) jumpHack(false)
+    for _,c in pairs(conns) do if c and type(c)=="userdata" then c:Disconnect() end end
+    for _,d in pairs(hbList) do if d.p then d.p:Destroy() end end
+    restoreOpt()
+    if wm then wm:Destroy() end if menu then menu:Destroy() end
+end
+
+-- ===== MENU 2 TAB =====
+local menu = Instance.new("ScreenGui", game:GetService("CoreGui"))
+menu.Name = "TAZZ_M"
+
+local mf = Instance.new("Frame", menu)
+mf.Size = UDim2.new(0,340,0,420) mf.Position = UDim2.new(0.5,-170,0.5,-210)
+mf.BackgroundColor3 = Color3.fromRGB(14,14,24) mf.BorderSizePixel = 0 mf.Visible = false
+Instance.new("UICorner",mf).CornerRadius = UDim.new(0,10)
+Instance.new("UIStroke",mf).Color = Color3.fromRGB(80,40,170)
+
+-- Title
+local tb = Instance.new("Frame", mf)
+tb.Size = UDim2.new(1,0,0,40) tb.BackgroundColor3 = Color3.fromRGB(18,10,35) tb.BorderSizePixel = 0
+Instance.new("UICorner",tb).CornerRadius = UDim.new(0,10)
+
+local tt = Instance.new("TextLabel", tb)
+tt.Text = "TAZZ" tt.Size = UDim2.new(0,80,1,0) tt.Position = UDim2.new(0,12,0,0)
+tt.BackgroundTransparency = 1 tt.TextColor3 = Color3.new(1,1,1) tt.Font = Enum.Font.GothamBlack tt.TextSize = 18 tt.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Tab buttons
+local tab1 = Instance.new("TextButton", tb)
+tab1.Text = "COMBAT" tab1.Size = UDim2.new(0,60,0,24) tab1.Position = UDim2.new(0,100,0,8)
+tab1.BackgroundColor3 = Color3.fromRGB(80,40,170) tab1.TextColor3 = Color3.new(1,1,1) tab1.Font = Enum.Font.GothamBold tab1.TextSize = 9 tab1.BorderSizePixel = 0
+Instance.new("UICorner",tab1).CornerRadius = UDim.new(0,4)
+
+local tab2 = Instance.new("TextButton", tb)
+tab2.Text = "TOI UU" tab2.Size = UDim2.new(0,60,0,24) tab2.Position = UDim2.new(0,165,0,8)
+tab2.BackgroundColor3 = Color3.fromRGB(40,40,60) tab2.TextColor3 = Color3.new(0.7,0.7,0.7) tab2.Font = Enum.Font.GothamBold tab2.TextSize = 9 tab2.BorderSizePixel = 0
+Instance.new("UICorner",tab2).CornerRadius = UDim.new(0,4)
+
+local cb = Instance.new("TextButton", tb)
+cb.Text = "X" cb.Size = UDim2.new(0,30,0,30) cb.Position = UDim2.new(1,-36,0,5)
+cb.BackgroundColor3 = Color3.new(0.8,0.15,0.15) cb.BackgroundTransparency = 0.3
+cb.TextColor3 = Color3.new(1,1,1) cb.Font = Enum.Font.GothamBlack cb.TextSize = 16 cb.BorderSizePixel = 0
+Instance.new("UICorner",cb).CornerRadius = UDim.new(0,15)
+cb.MouseButton1Click:Connect(function() mf.Visible = false end)
+
+-- Kéo
+local dr,ds,sp = false,nil,nil
+tb.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 then dr=true ds=i.Position sp=mf.Position end end)
+UIS.InputChanged:Connect(function(i) if dr and i.UserInputType==Enum.UserInputType.MouseMovement then local d=i.Position-ds mf.Position=UDim2.new(sp.X.Scale,sp.X.Offset+d.X,sp.Y.Scale,sp.Y.Offset+d.Y) end end)
+UIS.InputEnded:Connect(function() dr=false end)
+
+-- Containers
+local c1 = Instance.new("ScrollingFrame", mf)
+c1.Size = UDim2.new(1,0,1,-40) c1.Position = UDim2.new(0,0,0,40) c1.BackgroundTransparency = 1 c1.ScrollBarThickness = 2 c1.CanvasSize = UDim2.new(0,0,0,0) c1.Visible = true
+local l1 = Instance.new("UIListLayout", c1) l1.Padding = UDim.new(0,3) l1.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+local c2 = Instance.new("ScrollingFrame", mf)
+c2.Size = UDim2.new(1,0,1,-40) c2.Position = UDim2.new(0,0,0,40) c2.BackgroundTransparency = 1 c2.ScrollBarThickness = 2 c2.CanvasSize = UDim2.new(0,0,0,0) c2.Visible = false
+local l2 = Instance.new("UIListLayout", c2) l2.Padding = UDim.new(0,3) l2.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+-- Hàm tạo nút
+local function btn(container, name, key, callback)
+    local b = Instance.new("TextButton", container)
+    b.Size = UDim2.new(0.92,0,0,30) b.BackgroundColor3 = Color3.fromRGB(28,28,42) b.Text = "" b.BorderSizePixel = 0 b.AutoButtonColor = false
+    Instance.new("UICorner",b).CornerRadius = UDim.new(0,5)
+    local sk = Instance.new("UIStroke",b) sk.Color = Color3.fromRGB(55,55,75) sk.Thickness = 0.5
+    local ic = Instance.new("TextLabel",b) ic.Size = UDim2.new(0,20,1,0) ic.BackgroundTransparency = 1 ic.Text = "🔴" ic.TextSize = 9
+    local lb = Instance.new("TextLabel",b) lb.Size = UDim2.new(1,-22,1,0) lb.Position = UDim2.new(0,22,0,0) lb.BackgroundTransparency = 1 lb.Text = name lb.TextColor3 = Color3.fromRGB(175,175,195) lb.Font = Enum.Font.GothamBold lb.TextSize = 10 lb.TextXAlignment = Enum.TextXAlignment.Left
+    menuBtns[key] = {icon=ic,lbl=lb,stk=sk}
+    b.MouseButton1Click:Connect(function()
+        local cur
+        if fe[key]~=nil then cur=not fe[key] callback(cur) sync(key,cur)
+        elseif opt[key]~=nil then cur=not opt[key] applyOpt() sync(key,cur) end
+    end)
+end
+
+-- === TAB 1: COMBAT ===
+btn(c1, "Fly", "fly", fly)
+btn(c1, "Aimbot", "aim", aim)
+btn(c1, "Auto Combat", "combat", combat)
+btn(c1, "ESP + Vien", "esp", esp)
+btn(c1, "Big Hitbox", "hb", hb)
+btn(c1, "Tang Damage", "dmg", dmg)
+
+-- Slider tốc độ bay
+local spf = Instance.new("Frame", c1) spf.Size = UDim2.new(0.92,0,0,22) spf.BackgroundColor3 = Color3.fromRGB(32,32,46) spf.BorderSizePixel = 0
+Instance.new("UICorner",spf).CornerRadius = UDim.new(0,4)
+local spl = Instance.new("TextLabel",spf) spl.Text="Fly Speed" spl.Size=UDim2.new(0,55,1,0) spl.Position=UDim2.new(0,5,0,0) spl.BackgroundTransparency=1 spl.TextColor3=Color3.fromRGB(140,140,160) spl.Font=Enum.Font.Gotham spl.TextSize=8
+local spi = Instance.new("TextBox",spf) spi.Size=UDim2.new(0,42,0,14) spi.Position=UDim2.new(0,65,0,4) spi.BackgroundColor3=Color3.fromRGB(44,44,58) spi.Text=tostring(flySpd) spi.TextColor3=Color3.new(1,1,1) spi.Font=Enum.Font.GothamBold spi.TextSize=8
+Instance.new("UICorner",spi).CornerRadius=UDim.new(0,3)
+local spb = Instance.new("TextButton",spf) spb.Size=UDim2.new(0,28,0,14) spb.Position=UDim2.new(0,112,0,4) spb.BackgroundColor3=Color3.fromRGB(80,40,170) spb.Text="SET" spb.TextColor3=Color3.new(1,1,1) spb.Font=Enum.Font.GothamBold spb.TextSize=7 spb.BorderSizePixel=0
+Instance.new("UICorner",spb).CornerRadius=UDim.new(0,3)
+spb.MouseButton1Click:Connect(function() local v=tonumber(spi.Text) if v then flySpd=math.clamp(v,10,500) spi.Text=tostring(flySpd) end end)
+
+-- === TAB 2: TỐI ƯU ===
+btn(c2, "Sieu Anti Lag", "antiLag", function() end)
+btn(c2, "Xoa Rang Cua", "antiAlias", function() end)
+btn(c2, "Tat Global Shadows", "noShadow", function() end)
+btn(c2, "Xoa Texture", "noTexture", function() end)
+btn(c2, "Tat Hieu Ung", "noEffect", function() end)
+btn(c2, "Xoa Co", "noGrass", function() end)
+btn(c2, "Xoa Suong Mu", "noFog", function() end)
+btn(c2, "Xoa Atmosphere", "noAtmos", function() end)
+btn(c2, "Giam Render Dist", "lowRender", function() end)
+btn(c2, "Xoa Nuoc", "noWater", function() end)
+btn(c2, "Xoa Decals", "noDecal", function() end)
+btn(c2, "Xoa Cay Coi", "noTree", function() end)
+btn(c2, "Xoa La Cay", "noLeaf", function() end)
+btn(c2, "Xoa Bau Troi", "noSky", function() end)
+btn(c2, "Xoa Ghe Ngoi", "noSeat", function() end)
+btn(c2, "Tat Bloom", "noBloom", function() end)
+btn(c2, "Tat SunRays", "noSunRay", function() end)
+btn(c2, "Tat ColorCorrection", "noColorCor", function() end)
+btn(c2, "Tat Post Processing", "noPost", function() end)
+btn(c2, "Giam Do Sang", "lowBright", function() end)
+btn(c2, "Tat Tat Ca Bong", "noAllShadow", function() end)
+btn(c2, "Mo Khoa FPS (999)", "unlockFPS", function() end)
+btn(c2, "Tat Nhac Nen", "noMusic", function() end)
+btn(c2, "Tat Am Thanh", "noSound", function() end)
+btn(c2, "Xoa Bot Vat Pham", "delItem", function() end)
+btn(c2, "Xoa Bot Khoi", "delBlock", function() end)
+
+-- Speed + Jump
+btn(c2, "Chay Nhanh", "speedHack", speedHack)
+local spf2 = Instance.new("Frame", c2) spf2.Size = UDim2.new(0.92,0,0,22) spf2.BackgroundColor3 = Color3.fromRGB(32,32,46) spf2.BorderSizePixel = 0
+Instance.new("UICorner",spf2).CornerRadius = UDim.new(0,4)
+local spl2 = Instance.new("TextLabel",spf2) spl2.Text="Run Speed" spl2.Size=UDim2.new(0,55,1,0) spl2.Position=UDim2.new(0,5,0,0) spl2.BackgroundTransparency=1 spl2.TextColor3=Color3.fromRGB(140,140,160) spl2.Font=Enum.Font.Gotham spl2.TextSize=8
+local spi2 = Instance.new("TextBox",spf2) spi2.Size=UDim2.new(0,42,0,14) spi2.Position=UDim2.new(0,65,0,4) spi2.BackgroundColor3=Color3.fromRGB(44,44,58) spi2.Text=tostring(runSpd) spi2.TextColor3=Color3.new(1,1,1) spi2.Font=Enum.Font.GothamBold spi2.TextSize=8
+Instance.new("UICorner",spi2).CornerRadius=UDim.new(0,3)
+local spb2 = Instance.new("TextButton",spf2) spb2.Size=UDim2.new(0,28,0,14) spb2.Position=UDim2.new(0,112,0,4) spb2.BackgroundColor3=Color3.fromRGB(80,40,170) spb2.Text="SET" spb2.TextColor3=Color3.new(1,1,1) spb2.Font=Enum.Font.GothamBold spb2.TextSize=7 spb2.BorderSizePixel=0
+Instance.new("UICorner",spb2).CornerRadius=UDim.new(0,3)
+spb2.MouseButton1Click:Connect(function() local v=tonumber(spi2.Text) if v then runSpd=math.clamp(v,16,500) spi2.Text=tostring(runSpd) end end)
+
+btn(c2, "Nhay Cao", "jumpHack", jumpHack)
+local spf3 = Instance.new("Frame", c2) spf3.Size = UDim2.new(0.92,0,0,22) spf3.BackgroundColor3 = Color3.fromRGB(32,32,46) spf3.BorderSizePixel = 0
+Instance.new("UICorner",spf3).CornerRadius = UDim.new(0,4)
+local spl3 = Instance.new("TextLabel",spf3) spl3.Text="Jump Power" spl3.Size=UDim2.new(0,55,1,0) spl3.Position=UDim2.new(0,5,0,0) spl3.BackgroundTransparency=1 spl3.TextColor3=Color3.fromRGB(140,140,160) spl3.Font=Enum.Font.Gotham spl3.TextSize=8
+local spi3 = Instance.new("TextBox",spf3) spi3.Size=UDim2.new(0,42,0,14) spi3.Position=UDim2.new(0,65,0,4) spi3.BackgroundColor3=Color3.fromRGB(44,44,58) spi3.Text=tostring(jumpPwr) spi3.TextColor3=Color3.new(1,1,1) spi3.Font=Enum.Font.GothamBold spi3.TextSize=8
+Instance.new("UICorner",spi3).CornerRadius=UDim.new(0,3)
+local spb3 = Instance.new("TextButton",spf3) spb3.Size=UDim2.new(0,28,0,14) spb3.Position=UDim2.new(0,112,0,4) spb3.BackgroundColor3=Color3.fromRGB(80,40,170) spb3.Text="SET" spb3.TextColor3=Color3.new(1,1,1) spb3.Font=Enum.Font.GothamBold spb3.TextSize=7 spb3.BorderSizePixel=0
+Instance.new("UICorner",spb3).CornerRadius=UDim.new(0,3)
+spb3.MouseButton1Click:Connect(function() local v=tonumber(spi3.Text) if v then jumpPwr=math.clamp(v,50,500) spi3.Text=tostring(jumpPwr) end end)
+
+btn(c2, "Tu Dong Nhat", "autoPick", function() end)
+btn(c2, "Don Terrain", "cleanTerrain", function() end)
+btn(c2, "Don Workspace", "cleanWS", function() end)
+
+-- Nút All Max / All Off
+local am = Instance.new("TextButton", c2) am.Size=UDim2.new(0.92,0,0,32) am.BackgroundColor3=Color3.fromRGB(30,80,30) am.Text="BAT TAT CA MAX" am.TextColor3=Color3.new(1,1,1) am.Font=Enum.Font.GothamBlack am.TextSize=10 am.BorderSizePixel=0
+Instance.new("UICorner",am).CornerRadius=UDim.new(0,5) am.MouseButton1Click:Connect(allMax)
+
+local ao = Instance.new("TextButton", c2) ao.Size=UDim2.new(0.92,0,0,32) ao.BackgroundColor3=Color3.fromRGB(150,30,30) ao.Text="TAT TAT CA" ao.TextColor3=Color3.new(1,1,1) ao.Font=Enum.Font.GothamBlack ao.TextSize=10 ao.BorderSizePixel=0
+Instance.new("UICorner",ao).CornerRadius=UDim.new(0,5) ao.MouseButton1Click:Connect(allOff)
+
+-- Đổi Server + Xóa
+local srv = Instance.new("TextButton", c2) srv.Size=UDim2.new(0.92,0,0,30) srv.BackgroundColor3=Color3.fromRGB(38,28,72) srv.Text="Doi Server" srv.TextColor3=Color3.new(1,1,1) srv.Font=Enum.Font.GothamBold srv.TextSize=10 srv.BorderSizePixel=0
+Instance.new("UICorner",srv).CornerRadius=UDim.new(0,5) srv.MouseButton1Click:Connect(sv)
+
+local del = Instance.new("TextButton", c2) del.Size=UDim2.new(0.92,0,0,32) del.BackgroundColor3=Color3.fromRGB(165,22,22) del.Text="Xoa Script" del.TextColor3=Color3.new(1,1,1) del.Font=Enum.Font.GothamBlack del.TextSize=10 del.BorderSizePixel=0
+Instance.new("UICorner",del).CornerRadius=UDim.new(0,5) del.MouseButton1Click:Connect(destroy)
+
+-- Tab switch
+tab1.MouseButton1Click:Connect(function()
+    tab=1 c1.Visible=true c2.Visible=false
+    tab1.BackgroundColor3=Color3.fromRGB(80,40,170) tab1.TextColor3=Color3.new(1,1,1)
+    tab2.BackgroundColor3=Color3.fromRGB(40,40,60) tab2.TextColor3=Color3.new(0.7,0.7,0.7)
+end)
+tab2.MouseButton1Click:Connect(function()
+    tab=2 c1.Visible=false c2.Visible=true
+    tab2.BackgroundColor3=Color3.fromRGB(80,40,170) tab2.TextColor3=Color3.new(1,1,1)
+    tab1.BackgroundColor3=Color3.fromRGB(40,40,60) tab1.TextColor3=Color3.new(0.7,0.7,0.7)
+end)
+
+l1:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() c1.CanvasSize=UDim2.new(0,0,0,l1.AbsoluteContentSize.Y+4) end)
+l2:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() c2.CanvasSize=UDim2.new(0,0,0,l2.AbsoluteContentSize.Y+4) end)
+
+-- ===== PHÍM =====
+UIS.InputBegan:Connect(function(i,g)
+    if g or i.UserInputType~=Enum.UserInputType.Keyboard then return end
+    local k=i.KeyCode
+    if k==Enum.KeyCode.F4 then mf.Visible=not mf.Visible
+    elseif k==Enum.KeyCode.E then local s=not fe.fly fly(s) sync("fly",s)
+    elseif k==Enum.KeyCode.R then local s=not fe.aim aim(s) sync("aim",s)
+    elseif k==Enum.KeyCode.G then local s=not fe.combat combat(s) sync("combat",s)
+    elseif k==Enum.KeyCode.Y then local s=not fe.esp esp(s) sync("esp",s)
+    elseif k==Enum.KeyCode.N then local s=not fe.hb hb(s) sync("hb",s)
+    elseif k==Enum.KeyCode.T then local s=not fe.dmg dmg(s) sync("dmg",s)
+    elseif k==Enum.KeyCode.P then sv()
+    elseif k==Enum.KeyCode.X then destroy() end
+end)
+
+plr.CharacterAdded:Connect(function()
+    if fe.fly then fe.fly=false fly(false) end
+    task.wait(1)
+    if fe.esp then for _,p in pairs(Players:GetPlayers()) do if p~=plr and p.Character then espCreate(p) end end end
+    if fe.hb then for _,p in pairs(Players:GetPlayers()) do if p~=plr and p.Character then hbCreate(p) end end end
+end)
+
+SG:SetCore("SendNotification",{Title="TAZZ V1",Text="✅ 42 tinh nang! F4 menu",Duration=4})
